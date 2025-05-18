@@ -15,14 +15,14 @@ const popularBlogs = [
   {
     id: 1,
     title: "10 Essential Web Development Tools for 2025",
-    slug: "essential-web-dev-tools-2025",
+    slug: "exploring-nvidia-llama-3-1",
     thumbnail: essentialharvest,
     excerpt: "Discover the must-have tools that will revolutionize your web development workflow this year.",
   },
   {
     id: 2,
     title: "How to Build Responsive Layouts with Tailwind CSS",
-    slug: janvry,
+    slug: "exploring-nvidia-llama-3-1" ,
     thumbnail: janvry,
     excerpt: "Learn the techniques for creating beautiful, responsive designs using Tailwind CSS.",
   },
@@ -103,7 +103,7 @@ const BlogsPage = () => {
                 <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
                 <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                   <Link
-                    href={`/blog`}
+                    href={`/blogs/${blog.slug}`}
                     className="inline-flex items-center text-green-500 font-medium hover:text-green-600 transition-colors"
                   >
                     Read More
