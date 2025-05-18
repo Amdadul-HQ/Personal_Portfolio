@@ -5,6 +5,16 @@ import ScrollElement from "@/components/ui/scroll-element";
 import { FlipWords } from "@/components/ui/flip-wors";
 import { RevealLinks } from "@/components/common/RevealLinks";
 import { twMerge } from "tailwind-merge";
+
+interface CardProps {
+  containerRef: React.RefObject<HTMLDivElement>;
+  src: string;
+  alt: string;
+  top: string;
+  left: string;
+  rotate: string;
+  className?: string;
+}
 export const AboutsPage = () => {
   const words = [
     "Creative",
@@ -173,7 +183,7 @@ export const AboutsPage = () => {
 };
 
 const Cards = () => {
-  const containerRef = useRef(null);
+   const containerRef = useRef<HTMLDivElement | any>(null);
 
   return (
     <div className="absolute inset-0 z-10" ref={containerRef}>
@@ -235,7 +245,7 @@ const Cards = () => {
   );
 };
 
-const Card = ({ containerRef, src, alt, top, left, rotate, className }) => {
+const Card = ({ containerRef, src, alt, top, left, rotate, className }:CardProps) => {
   const [zIndex, setZIndex] = useState(0);
 
   const updateZIndex = () => {
