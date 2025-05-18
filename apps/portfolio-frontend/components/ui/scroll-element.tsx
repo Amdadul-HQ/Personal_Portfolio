@@ -26,7 +26,7 @@ function ScrollElement({
   delay = 0,
   direction = 'down',
   ...rest
-}:{children?:React.ReactNode,className?:string,variants?:string,viewport?:object,delay?:number,direction?:string}) {
+}:{children?:React.ReactNode,className?:string,variants?:any,viewport?:object,delay?:number,direction?:string}) {
   const baseVariants = variants || generateVariants(direction);
   const modifiedVariants = {
     hidden: baseVariants.hidden,

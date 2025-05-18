@@ -23,7 +23,7 @@ const ScrollStack =()=> {
         
         if (window.scrollY >= sectionTop - 50 && window.scrollY < sectionTop + sectionHeight) {
           const sectionId = section.getAttribute('id');
-          console.log('Current Section:', sectionTop,sectionHeight); // Log active section
+          // console.log('Current Section:', sectionTop,sectionHeight); // Log active section
           setActiveSection(sectionId);
         }
       });
