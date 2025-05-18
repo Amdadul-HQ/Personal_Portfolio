@@ -2,8 +2,10 @@
 
 import { FlipWords } from '@/components/ui/flip-wors'
 import { motion, useScroll, useTransform } from 'framer-motion'
-
-
+import Image from 'next/image'
+import profile from '../assets/portfolio.jpeg'
+import { InteractiveHoverButton } from '@/components/ui/InteractiveHoverButton'
+import { ShimmerButton } from '@/components/ui/shimmer-button'
 const Hero =() => {
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 200], [1, 0])
@@ -11,7 +13,7 @@ const Hero =() => {
   const words = ["creative", "interactive", "beautiful", "modern"]
 
   return (
-    <div className="relative min-h-[90vh] flex items-center">
+    <div className="relative min-h-[90vh] flex flex-col items-center">
         <motion.div
           style={{ opacity, y }}
           className="container relative z-10 mx-auto px-4 py-24 sm:px-6 lg:px-8"
@@ -23,6 +25,13 @@ const Hero =() => {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
+                <div className='w-[200px] h-[200px] relative overflow-hidden rounded-full mx-auto'>
+                <Image
+                src={profile}
+                className='w-full absolute -top-12'
+                alt='Amdadul Image'
+                />
+              </div>
               <div className="space-y-4 flex flex-col justify-center items-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -40,7 +49,7 @@ const Hero =() => {
                   transition={{ delay: 0.3 }}
                   className="text-4xl font-bold  text-primary sm:text-5xl lg:text-6xl "
                 >
-                  Hi, I&apos;m Amdadul HQ<span className="text-green-300">.</span>
+                  Hi, I&apos;m Amdadul HQ.
                 </motion.h1>
 
                 <motion.div
@@ -61,15 +70,23 @@ const Hero =() => {
               </div>
             </motion.div>
           </div>
+          <div className='flex items-center gap-x-3 mt-3 justify-center'>
+          <ShimmerButton> 
+            <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
+            Resume
+            </span>
+          </ShimmerButton>
+          <InteractiveHoverButton>Hire Me</InteractiveHoverButton>
+          </div>
         </motion.div>
       {/* </ImageMouseTrail> */}
 
       {/* Gradient overlays */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background/40" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
+      {/* <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background/40" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" /> */}
 
       {/* Background pattern */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-gray-950 dark:[background:radial-gradient(#1a1a1a_1px,transparent_1px)]" />
+      {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-gray-950 dark:[background:radial-gradient(#1a1a1a_1px,transparent_1px)]" /> */}
     </div>
   )
 }
