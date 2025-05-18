@@ -5,10 +5,8 @@ import { TReactChildrenType } from "@/types/types";
 const CommonLayout = ({children}:TReactChildrenType) => {
     return (
         <>
-       <header>
        <Navbar/>
-       </header>
-            {children}
+        {children}
             <footer>
         {/* <Footer/> */}
         </footer>   

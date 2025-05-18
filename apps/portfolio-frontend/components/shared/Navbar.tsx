@@ -1,10 +1,11 @@
 'use client'
-
-import * as React from "react"
+import LocomotiveScroll from 'locomotive-scroll';
 import { Asterisk, Menu, Github } from 'lucide-react'
 import Link from "next/link"
 import { Button } from "@workspace/ui/components/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@workspace/ui/components/sheet"
+import { useEffect, useState } from 'react';
+
 
 const navLinks = [
   { id: "01", name: "Home", href: "/" },
@@ -14,15 +15,25 @@ const navLinks = [
   { id: "06", name: "Contact", href: "/contact" },
 ]
 const Navbar =() => {
-  const [isScrolled, setIsScrolled] = React.useState(false)
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isScrolled, setIsScrolled] =useState(false)
+  const [isOpen, setIsOpen] =useState(false)
+
+  // useEffect(() => {
+  //   const scroll = new LocomotiveScroll({
+  //     el: document.querySelector("[data-scroll-container]"),
+  //     smooth: true,
+  //   });
+
+  //   return () => scroll.destroy(); 
+  // }, []);
+  // const [activeSection, setActiveSection] = useState('');
 
   const playClickSound = () => {
     const audio = new Audio('/src/assets/sfx/click.wav')
     audio.play()
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
@@ -34,15 +45,22 @@ const Navbar =() => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
-        ${isScrolled ? 'backdrop-blur-md' : 'bg-transparent'}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
+        ${isScrolled ? 'backdrop-blur-md ' : 'bg-transparent'}`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4 rounded-lg">
           <div className="flex items-center">
             <Link href={'/'}>
-              <div className="flex-shrink-0 bg-green-500 rounded-full">
-                <Asterisk size={40} className="text-secondary" />
+              <div >
+                <p className="font-bold">
+                  Amdadul-HQ
+                </p>
+                {/* <Image
+                width={100}
+                 src={logo}
+                 alt="Logo"
+                /> */}
               </div>
             </Link>
 
@@ -68,8 +86,8 @@ const Navbar =() => {
             </div>
           </div>
           <div className="flex items-center">
-            <Link href={'https://github.com/durgeshbachhav'} >
-              <Button variant="ghost" size="icon" className="mr-2 bg-green-400">
+            <Link target="_blank" href={'https://github.com/Amdadul-HQ'} >
+              <Button variant="ghost" size="icon" className="mr-2 bg-green-400 cursor-pointer">
                 <Github className="h-5 w-5" />
               </Button>
             </Link>
