@@ -27,31 +27,39 @@ const experiences = [
   },
 ]
 
+
 export default function Experience() {
   const containerRef = useRef(null)
 
   return (
-    <section className="min-h-screen bg-[#000] py-24 px-4 sm:px-6 lg:px-8 rounded-t-[80px]">
-      <div className="max-w-6xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-green-600 mb-16 tracking-wider"
-        >
-          EXPERIENCE
-        </motion.h2>
+    <>
+      <section className="min-h-screen bg-[#000] py-24 px-4 sm:px-6 lg:px-8 rounded-t-[80px]">
+        <div className="max-w-6xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl font-bold text-green-600 mb-16 tracking-wider"
+          >
+            EXPERIENCE
+          </motion.h2>
 
-        <div ref={containerRef} className="relative ml-4 md:ml-8">
-          {/* Timeline vertical line */}
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-green-600/30" />
+          <div ref={containerRef} className="relative ml-4 md:ml-8">
+            {/* Timeline vertical line */}
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-green-600/30" />
 
-          {experiences.map((experience, index) => (
-            <TimelineItem key={index} experience={experience} index={index} isLast={index === experiences.length - 1} />
-          ))}
+            {experiences.map((experience, index) => (
+              <TimelineItem
+                key={index}
+                experience={experience}
+                index={index}
+                isLast={index === experiences.length - 1}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 

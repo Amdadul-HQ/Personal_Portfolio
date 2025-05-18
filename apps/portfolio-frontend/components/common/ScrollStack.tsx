@@ -3,12 +3,15 @@
 // import Projects from "./project";
 // import Skills from "./skills";
 // import Experience from "./experience";
-// import { RevealLinks } from "./RevealLinks";
 
 import { useEffect, useState } from "react";
 import AboutMe from "./aboutme";
 import Experience from "./exprience";
 import Skills from "./skills";
+import Projects from "./featureProject";
+import { RevealLinks } from "./RevealLinks";
+import { PopularBlogs } from "./blogs";
+
 const ScrollStack =()=> {
  const [activeSection, setActiveSection] = useState('');
   useEffect(() => {
@@ -17,10 +20,10 @@ const ScrollStack =()=> {
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.offsetHeight;
-
+        
         if (window.scrollY >= sectionTop - 50 && window.scrollY < sectionTop + sectionHeight) {
           const sectionId = section.getAttribute('id');
-          console.log('Current Section:', sectionId); // Log active section
+          console.log('Current Section:', sectionTop,sectionHeight); // Log active section
           setActiveSection(sectionId);
         }
       });
@@ -44,10 +47,13 @@ const ScrollStack =()=> {
             <Skills />
           </section>
           <section className="h-screen sticky top-0" id="projects">
-            {/* <Projects /> */}
+            <Projects />
+          </section>
+          <section className="h-screen sticky top-0" id="blogs">
+            <PopularBlogs />
           </section>
           <section className="bg-green-300 rounded-t-[80px]  sticky top-10 md:top-0" id="links">
-            {/* <RevealLinks /> */}
+            <RevealLinks />
           </section>
         </article>
       </main>

@@ -8,9 +8,9 @@ import "./fonts.css";
 //   subsets: ["latin"],
 // });
 
-export const metadata: Metadata = {
-  title: "EvenTora |  Manage Your Public & Private Event",
-  description: "Manage Your Public & Private Event",
+export const metadata = {
+  title: "AMDADUL HQ | Portfolio",
+  description: "Creative Web Developer",
 };
 
 export default function RootLayout({

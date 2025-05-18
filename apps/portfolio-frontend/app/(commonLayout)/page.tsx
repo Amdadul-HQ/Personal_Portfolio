@@ -3,10 +3,10 @@ import Hero from "@/modules/hero";
 
 const page = () => {
     return (
-        <div>
+        <main>
             <Hero/>
             <ScrollStack/>
-        </div>
+        </main>
     );
 };
 

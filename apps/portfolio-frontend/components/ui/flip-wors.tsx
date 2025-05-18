@@ -7,7 +7,7 @@ export const FlipWords = ({
   words,
   duration = 3000,
   className
-}:{words:string[],duration:number,className:string}) => {
+}:{words?:string[],duration?:number,className?:string}) => {
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState(false);
 
