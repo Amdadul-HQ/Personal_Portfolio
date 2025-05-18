@@ -1,13 +1,15 @@
 "use client"
 
+import React from 'react';
 import Image from "next/image"
-import { ArrowRight, MoveRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
-import essentialharvest from '../../assets/projects/eh1.png'
-import janvry from '../../assets/projects/janvry.png'
-import cursify from '../../assets/projects/cursify.png'
 import Link from "next/link"
-
+import essentialharvest from '../assets/projects/eh1.png'
+import janvry from '../assets/projects/janvry.png'
+import cursify from '../assets/projects/cursify.png'
+import ScrollElement from '@/components/ui/scroll-element';
+import { RevealLinks } from '@/components/common/RevealLinks';
 // Sample blog data - replace with your actual data source
 const popularBlogs = [
   {
@@ -40,8 +42,8 @@ const popularBlogs = [
   },
 ]
 
-export function PopularBlogs() {
-  // Animation variants
+const BlogsPage = () => {
+     // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -66,39 +68,15 @@ export function PopularBlogs() {
     },
   }
 
-  return (
-    <section className="w-full min-h-screen bg-[#EFEFEF] flex py-24 justify-center rounded-tr-[40px] md:rounded-tr-[80px] rounded-tl-[40px] md:rounded-tl-[80px] px-4">
-      <div className="container max-w-6xl mx-auto">
-        <motion.div
-          className="mb-12 flex items-center justify-between"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Most Popular</h2>
-          <motion.p
-            className="mt-4 text-gray-600 max-w-2xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            Our most read articles and resources that readers love
-          </motion.p>
-          </div>
-          <Link className='flex gap-2 hover:text-green-400' href='/blogs'>
-        See All Blogs
-        <motion.div
-             whileHover={{ x: 5 }}
-             transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-             <MoveRight />
-        </motion.div>
-        </Link>
-        </motion.div>
-
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2"
+    return (
+        <>
+         <section className="relative grid min-h-screen w-full place-content-center overflow-hidden ">
+            <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 md:text-[200px]">
+            BLOGS<span className="text-orange-500">.</span>
+            </h2>
+      </section>   
+            <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 max-w-6xl mx-auto lg:grid-cols-4 gap-2"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -148,7 +126,11 @@ export function PopularBlogs() {
             </motion.div>
           ))}
         </motion.div>
-      </div>
-    </section>
-  )
-}
+        <ScrollElement className='mt-10'>
+            <RevealLinks />
+        </ScrollElement>
+        </>
+    );
+};
+
+export default BlogsPage;

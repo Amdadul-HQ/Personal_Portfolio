@@ -6,10 +6,7 @@ const CommonLayout = ({children}:TReactChildrenType) => {
     return (
         <>
        <Navbar/>
-        {children}
-            <footer>
-        {/* <Footer/> */}
-        </footer>   
+        {children} 
         </>
     )
 }
