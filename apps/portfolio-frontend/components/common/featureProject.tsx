@@ -8,7 +8,16 @@ import janvry from '../../assets/projects/janvry.png'
 import cursify from '../../assets/projects/cursify.png'
 import Link from 'next/link'
 
-const images = [
+type ImageType = {
+  id?: number;
+  src: string; // If using static imports like in your case, `StaticImageData` is more accurate
+  alt?: string;
+  description?: string;
+  slug?: string;
+}
+
+
+const images :ImageType[]  = [
      {
           id: 1,
           src: janvry,
@@ -33,12 +42,12 @@ const images = [
 ]
 
 export default function Projects() {
-     const [activeImage, setActiveImage] = useState(null)
+     const [activeImage, setActiveImage] = useState<ImageType| null>(null)
      const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
-     const requestRef = useRef(null)
+     const requestRef = useRef<number | null>(null)
      const prevCursorPosition = useRef({ x: 0, y: 0 })
 
-     const handleMouseMove = useCallback((e) => {
+     const handleMouseMove = useCallback((e:any) => {
           const { clientX, clientY } = e
           const dx = clientX - prevCursorPosition.current.x
           const dy = clientY - prevCursorPosition.current.y
@@ -50,7 +59,7 @@ export default function Projects() {
      }, [])
 
      useEffect(() => {
-          const updateCursorPosition = (e) => {
+          const updateCursorPosition = (e:any) => {
                if (requestRef.current) return
                requestRef.current = requestAnimationFrame(() => {
                     handleMouseMove(e)
@@ -64,9 +73,7 @@ export default function Projects() {
           }
      }, [handleMouseMove])
 
-     const handleImageHover = useCallback((image) => {
-          setActiveImage(image)
-     }, [])
+     const handleImageHover = useCallback((image:any) => setActiveImage(image), [])
 
      const handleMouseLeave = useCallback(() => {
           setActiveImage(null)
@@ -104,7 +111,7 @@ export default function Projects() {
                               <motion.div
                                    key={image.id}
                                    className="cursor-pointer flex flex-col md:flex-row items-start justify-between gap-4 group"
-                                   onMouseEnter={() => handleImageHover(image.src)}
+                                   onMouseEnter={() => handleImageHover(image?.src)}
                                    initial={{ opacity: 0, y: 30 }}
                                    whileInView={{ opacity: 1, y: 0 }}
                                    transition={{ duration: 0.5, delay: index * 0.2 }}

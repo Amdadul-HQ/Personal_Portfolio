@@ -151,7 +151,7 @@ export default function Skills() {
                     key={skillIndex}
                     variants={skillVariants}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-[#1A1A1A] rounded-full px-5 py-2.5 flex items-center gap-2 transition-all duration-300 hover:bg-[#252525]"
+                    className="bg-[#1A1A1A] rounded-full cursor-pointer px-5 py-2.5 flex items-center gap-2 transition-all duration-300 hover:bg-[#252525]"
                   >
                     <div className="w-5 h-5 relative">
                       <Image src={skill.icon || "/placeholder.svg"} alt={skill.name} fill className="object-contain" />
