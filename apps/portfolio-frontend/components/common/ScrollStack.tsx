@@ -13,7 +13,7 @@ import { RevealLinks } from "./RevealLinks";
 import { PopularBlogs } from "./blogs";
 
 const ScrollStack =()=> {
- const [activeSection, setActiveSection] = useState('');
+ const [activeSection, setActiveSection] = useState<string|null>(null);
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll('section');
