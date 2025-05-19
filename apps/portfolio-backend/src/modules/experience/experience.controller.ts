@@ -26,6 +26,18 @@ const file = req.file;
   });
 })
 
+const getExperienceDetails = catchAsync(async(req,res) => {
+  const {id} = req.params
+  const result = await ExperienceService.getExperienceDetails(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Experience retrieved successfully',
+    data: result,
+  });
+})
+
 const getAllExperience = catchAsync(async(req,res) => {
     const result = await ExperienceService.getAllExperience();
 
@@ -56,10 +68,26 @@ const updateExperience = catchAsync(async(req,res) => {
   });
 })
 
+const deleteExperience = catchAsync(async(req,res) => {
+  const { id } = req.params;
+  
+  const result = await ExperienceService.deleteExperience(id);
+  if(result){
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Experience Deleted successfully',
+      data: null,
+    });
+  }
+})
+
 
 
 export const ExperienceController = {
     createExperience,
     getAllExperience,
-    updateExperience
+    updateExperience,
+    deleteExperience,
+    getExperienceDetails
 }

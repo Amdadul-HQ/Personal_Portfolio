@@ -8,7 +8,7 @@ import { ExperienceTableSkeleton } from "@/components/dashboard/experience-table
 // Function to fetch experiences from the API
 async function getExperiences() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experiences`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experience`, {
       method:"GET",
       cache: "no-store",
       headers: {

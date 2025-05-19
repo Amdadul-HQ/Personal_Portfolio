@@ -22,6 +22,8 @@ router.post('/create',
 
 router.get('/',ExperienceController.getAllExperience)
 
+router.get('/:id',ExperienceController.getExperienceDetails)
+
 router.patch('/update/:id',auth(UserRole.ADMIN),
   multerUpload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +32,8 @@ router.patch('/update/:id',auth(UserRole.ADMIN),
   },
   validateRequest(ExperienceValidation.updateExperienceZodSchema),
   ExperienceController.updateExperience
-)
+);
+
+router.delete('/:id',auth(UserRole.ADMIN),ExperienceController.deleteExperience)
 
 export const ExperienceRoutes = router

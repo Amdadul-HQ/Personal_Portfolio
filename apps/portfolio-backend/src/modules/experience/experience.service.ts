@@ -12,6 +12,15 @@ const createExperience = async (payload:Experience,userId:string) => {
     return result
 }
 
+const getExperienceDetails = async(id:string) => {
+  const result = await prisma.experience.findUnique({
+    where:{
+      id
+    }
+  })
+  return result;
+}
+
 const getAllExperience = async () => {
     const result = await prisma.experience.findMany()
 
@@ -32,9 +41,19 @@ const updateExperience = async(id:string,data:Partial<Experience>) => {
   return result;
 }
 
+const deleteExperience = async(id:string) => {
+   const result = await prisma.experience.delete({
+    where:{
+      id
+    }
+  })
+  return result
+}
 
 export const ExperienceService =  {
     createExperience,
     getAllExperience,
-    updateExperience
+    updateExperience,
+    deleteExperience,
+    getExperienceDetails
 }

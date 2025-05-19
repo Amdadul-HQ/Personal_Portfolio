@@ -34,13 +34,10 @@ export function ExperienceTable({ experiences }: ExperienceTableProps) {
     if (!selectedExperience) return
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experiences/${selectedExperience.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experience/${selectedExperience.id}`, {
         method: "DELETE",
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to delete experience")
-      }
 
       // Refresh the page to show updated data
       router.refresh()
