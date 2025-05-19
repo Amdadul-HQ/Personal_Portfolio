@@ -22,9 +22,6 @@ const createExperienceZodSchema = z.object({
     endDate: z.string({
       required_error: 'End date is required',
     }),
-    userId: z.string({
-      required_error: 'User ID is required',
-    }),
   }),
 });
 
