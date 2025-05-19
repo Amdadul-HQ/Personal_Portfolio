@@ -22,6 +22,11 @@ model User {
   role     UserRole     @default(USER)
   password String
 
+
+  blogs       Blog[]     @relation("User")
+  projects    Project[]     @relation("Project")
+  experience  Experience[] @relation("Experience")
+  Skill       Skill[] @relation("Skill")
 }
 
 model Blog {
@@ -36,6 +41,8 @@ model Blog {
   publishDate       DateTime
   category          String
   brand             String[]
+  userId            String
+  user              User  @relation("User", fields: [userId], references: [id])
 }
 
 
@@ -55,6 +62,8 @@ model Project {
  features           String[]
  services           String[]
  techonology        String[]
+ userId            String
+ user              User  @relation("Project", fields: [userId], references: [id])
  createdAt          DateTime        @default(now())
  updatedAt          DateTime        @updatedAt
 } 
@@ -70,6 +79,8 @@ model Experience {
   endDate            DateTime
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
+  userId             String
+  user               User  @relation("Experience", fields: [userId], references: [id])
 }
 
 model Skill {
@@ -77,6 +88,8 @@ model Skill {
   field              FieldType
   name               String
   image              String
+  userId             String
+  user               User  @relation("Skill", fields: [userId], references: [id])
 }
 
 
