@@ -13,3 +13,82 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model USER {
+  id       String       @id       @default(uuid())
+  name     String       
+  email    String       @unique
+  role     UserRole     @default(USER)
+}
+
+model BLOG {
+  id                String       @id       @default(uuid())
+  title             String       
+  shortDescription  String
+  thumbnail         String
+  description       String
+  topic             String
+  readingTime       String
+  isFeatured         Boolean         @default(false)
+  publishDate       DateTime
+  category          String
+  brand             String[]
+}
+
+
+model PROJECT {
+ id                 String       @id       @default(uuid())
+ name               String
+ description        String
+ type               String
+ liveLink           String
+ gitHubLink         String
+ siteMockup         String
+ projectStartDate   DateTime
+ projectEndDate     DateTime
+ elements           Int
+ totalCode          Int
+ isFeatured         Boolean         @default(false)
+ features           String[]
+ services           String[]
+ techonology        String[]
+ createdAt          DateTime        @default(now())
+ updatedAt          DateTime        @updatedAt
+} 
+
+model EXPERIENCE {
+  id                 String       @id       @default(uuid())
+  role               String
+  companyImage       String
+  company            String
+  description        String
+  skill              String[]
+  startDate          DateTime
+  endDate            DateTime
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+model SKILL {
+  id                 String       @id       @default(uuid())
+  field              FIELDTYPE
+  name               String
+  image              String
+}
+
+
+enum FIELDTYPE {
+  FRONTEND
+  BACKEND
+  DEVOPS
+  TOOL
+}
+
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+
