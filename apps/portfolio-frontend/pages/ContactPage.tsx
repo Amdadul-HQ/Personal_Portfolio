@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import shakehand from '../assets/shakehands.svg'
 import { Mail } from "lucide-react";
@@ -13,11 +13,6 @@ export const ContactPage = () => {
   }, []);
   return (
     <>
-      {/* <SEO
-        title="Contact"
-        description="Welcome to my portfolio website. I'm a Full Stack Developer specializing in modern web technologies."
-        path="/contact"
-      /> */}
         <section className={twMerge(
           "sticky top-0 grid min-h-screen w-full place-content-center overflow-hidden bg-[#f5f5f5]",
           "lenis-section"
