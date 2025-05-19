@@ -66,6 +66,8 @@ export async function logout() {
   return { success: true }
 }
 
+
+
 export async function getSession() {
   const token = (await cookies()).get("accessToken")?.value
 
@@ -79,7 +81,7 @@ export async function getSession() {
     // You might want to add JWT verification logic here
 
     return {
-      isAuthenticated: true,
+      token
       // You can add more user info here if needed
     }
   } catch (error) {

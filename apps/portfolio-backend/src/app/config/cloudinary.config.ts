@@ -1,18 +1,10 @@
-let cloudinaryUpload: any = null;
+import { v2 as cloudinary } from 'cloudinary';
+import config from '.';
 
-try {
-  const { v2: cloudinary } = require('cloudinary');
-  const config = require('./index');
-  
-  cloudinary.config({
-    cloud_name: config.cloudinary_cloud_name,
-    api_key: config.cloudinary_api_key,
-    api_secret: config.cloudinary_api_secret,
-  });
-  
-  cloudinaryUpload = cloudinary;
-} catch (error) {
-  console.warn('Cloudinary not available');
-}
+cloudinary.config({
+  cloud_name: config.cloudinary_cloud_name,
+  api_key: config.cloudinary_api_key,
+  api_secret: config.cloudinary_api_secret,
+});
 
-export { cloudinaryUpload };
+export const cloudinaryUpload = cloudinary;

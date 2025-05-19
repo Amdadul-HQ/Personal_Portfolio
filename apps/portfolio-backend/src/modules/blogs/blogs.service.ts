@@ -15,14 +15,16 @@ const createBlogIntoDB = async(payload:Blog, userId:string) => {
   return result;
 }
 
-const getAllBlogs = async (filters: IBlogFilterRequest,
-  options: IPaginationOptions) => {
-    const { limit, page, skip } = paginationHelper.calculatePagination(options);
+const getAllBlogs = async (
+  filters: IBlogFilterRequest,
+  options: IPaginationOptions
+) => {
+  const { limit, page, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
   const andConditions: Prisma.BlogWhereInput[] = [];
 
-  // Search term filter
+  // Searchable fields
   if (searchTerm) {
     andConditions.push({
       OR: blogSearchableFields.map((field) => ({
@@ -34,12 +36,12 @@ const getAllBlogs = async (filters: IBlogFilterRequest,
     });
   }
 
-  // Other filters
+  // Other filters (dynamic)
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      AND: Object.keys(filterData).map((key) => ({
+      AND: Object.entries(filterData).map(([key, value]) => ({
         [key]: {
-          equals: (filterData as any)[key],
+          equals: value,
         },
       })),
     });
@@ -48,35 +50,32 @@ const getAllBlogs = async (filters: IBlogFilterRequest,
   const whereConditions: Prisma.BlogWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Fetch all events
-  const allEvents = await prisma.blog.findMany({
-    where: whereConditions,
-    include: {
-      user: true,
-    },
-    orderBy:
-      options.sortBy && options.sortOrder
-        ? { [options.sortBy]: options.sortOrder }
-        : {
-            publishDate: 'desc',
-          },
-  });
-
-  // Paginate the allEvents list
-  const paginatedData = allEvents.slice(skip, skip + limit);
+  // Fetch filtered and paginated blogs
+  const [blogs, total] = await prisma.$transaction([
+    prisma.blog.findMany({
+      where: whereConditions,
+      include: {
+        user: true,
+      },
+      orderBy:
+        options.sortBy && options.sortOrder
+          ? { [options.sortBy]: options.sortOrder }
+          : { publishDate: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.blog.count({ where: whereConditions }),
+  ]);
 
   return {
     meta: {
       page,
       limit,
-      total: allEvents.length,
+      total,
     },
-    data: {
-      paginatedData,
-    //   allEvents,
-    },
+    data: blogs,
   };
-}
+};
 
 
 const updateBlogIntoDB = async (id: string, data: Partial<Blog>) => {

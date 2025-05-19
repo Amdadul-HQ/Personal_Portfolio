@@ -37,14 +37,9 @@ const getBlogs = catchAsync(async (req, res) => {
 
   // Handle boolean conversion for 'isPublic' and 'isPaid' and ensure other filters are correctly handled
   const filters: IBlogFilterRequest = {
-    isFeatured:
-      rawFilters.isFeatured === 'true'
-        ? true : false,
-    searchTerm:
-      typeof rawFilters.searchTerm === 'string'
-        ? rawFilters.searchTerm
-        : undefined,
-  };
+  isFeatured: rawFilters.isFeatured === 'true' ? true : rawFilters.isFeatured === 'false' ? false : undefined,
+  searchTerm: typeof rawFilters.searchTerm === 'string' ? rawFilters.searchTerm : undefined,
+};
 
   // If filters are empty, set them to undefined to fetch all events
   if (
@@ -58,12 +53,12 @@ const getBlogs = catchAsync(async (req, res) => {
   const result = await BlogService.getAllBlogs(filters, options);
 
   sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Blog retrieved successfully',
-    meta: result.meta,
-    data: result.data,
-  });
+  success: true,
+  statusCode: httpStatus.OK,
+  message: 'Blog retrieved successfully',
+  meta: result.meta,
+  data: result.data, // already the blog array
+});
 });
 
 
