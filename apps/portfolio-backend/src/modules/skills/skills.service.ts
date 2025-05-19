@@ -14,6 +14,15 @@ const getAllSkills = async() => {
     return result
 }
 
+const getSkillsDetails = async(id:string) => {
+  const result = await prisma.skill.findUnique({
+    where:{
+      id
+    }
+  });
+  return result
+}
+
 const updateSkillIntoDB =async(id:string,data:Partial<Skill>,) => {
     await prisma.skill.findUniqueOrThrow({
     where: {
@@ -42,5 +51,6 @@ export const SkillsService = {
     createSkill,
     getAllSkills,
     updateSkillIntoDB,
-    deleteSkillFromDB
+    deleteSkillFromDB,
+    getSkillsDetails
 }

@@ -15,9 +15,11 @@ const createProjectInToDB = async(payload:Project,userId:string) => {
   return result;
 }
 
-const getAllProjectFromDB =  async (filters: IProjectFilterRequest,
-  options: IPaginationOptions) => {
-    const { limit, page, skip } = paginationHelper.calculatePagination(options);
+const getAllProjectFromDB = async (
+  filters: IProjectFilterRequest,
+  options: IPaginationOptions
+) => {
+  const { limit, page, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
   const andConditions: Prisma.ProjectWhereInput[] = [];
@@ -34,12 +36,19 @@ const getAllProjectFromDB =  async (filters: IProjectFilterRequest,
     });
   }
 
-  // Other filters
-  if (Object.keys(filterData).length > 0) {
+  // Other filters (remove undefined values)
+ const cleanFilterData: Record<string, any> = {};
+Object.entries(filterData).forEach(([key, value]) => {
+  if (value !== undefined) {
+    cleanFilterData[key] = value;
+  }
+});
+
+  if (Object.keys(cleanFilterData).length > 0) {
     andConditions.push({
-      AND: Object.keys(filterData).map((key) => ({
+      AND: Object.entries(cleanFilterData).map(([key, value]) => ({
         [key]: {
-          equals: (filterData as any)[key],
+          equals: value,
         },
       })),
     });
@@ -48,7 +57,6 @@ const getAllProjectFromDB =  async (filters: IProjectFilterRequest,
   const whereConditions: Prisma.ProjectWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  // Fetch all events
   const allProjects = await prisma.project.findMany({
     where: whereConditions,
     include: {
@@ -62,7 +70,6 @@ const getAllProjectFromDB =  async (filters: IProjectFilterRequest,
           },
   });
 
-  // Paginate the allEvents list
   const paginatedData = allProjects.slice(skip, skip + limit);
 
   return {
@@ -71,11 +78,10 @@ const getAllProjectFromDB =  async (filters: IProjectFilterRequest,
       limit,
       total: allProjects.length,
     },
-    data: {
-      paginatedData,
-    },
+    data: paginatedData, // FIX: unwrap array
   };
-}
+};
+
 
 const getProjectDetailsFromDB = async (id:string) => {
  const result = await prisma.project.findUniqueOrThrow({

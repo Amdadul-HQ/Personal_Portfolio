@@ -32,6 +32,8 @@ auth(UserRole.ADMIN),
 
 router.get('/',SkillController.getSkills)
 
+router.get('/:id',SkillController.getSkillsDetails)
+
 router.delete('/:id',auth(UserRole.ADMIN),SkillController.deleteSkill)
 
 export const SkillRoutes = router

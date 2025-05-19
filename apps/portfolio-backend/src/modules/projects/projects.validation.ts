@@ -17,9 +17,6 @@ const createProjectZodSchema = z.object({
     gitHubLink: z.string({
       required_error: 'GitHub link is required',
     }).url('GitHub link must be a valid URL'),
-    siteMockup: z.string({
-      required_error: 'Site mockup URL is required',
-    }).url('Site mockup must be a valid URL'),
     projectStartDate: z.string({
       required_error: 'Project start date is required',
     }),
@@ -48,9 +45,6 @@ const createProjectZodSchema = z.object({
     }), {
       required_error: 'Technology stack is required',
     }),
-    userId: z.string({
-      required_error: 'User ID is required',
-    }),
   }),
 });
 
@@ -61,7 +55,6 @@ const updateProjectZodSchema = z.object({
     type: z.string().optional(),
     liveLink: z.string().url('Live link must be a valid URL').optional(),
     gitHubLink: z.string().url('GitHub link must be a valid URL').optional(),
-    siteMockup: z.string().url('Site mockup must be a valid URL').optional(),
     projectStartDate: z.string().optional(),
     projectEndDate: z.string().optional(),
     elements: z.number().optional(),
@@ -70,7 +63,6 @@ const updateProjectZodSchema = z.object({
     features: z.array(z.string()).optional(),
     services: z.array(z.string()).optional(),
     techonology: z.array(z.string()).optional(),
-    userId: z.string().optional(),
   }),
 });
 

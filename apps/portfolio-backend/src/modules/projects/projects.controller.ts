@@ -32,27 +32,19 @@ const file = req.file;
 const getAllProjects = catchAsync(async (req, res) => {
   const rawFilters = pick(req.query, projectFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  // const user = req.user;
 
-  // Handle boolean conversion for 'isPublic' and 'isPaid' and ensure other filters are correctly handled
   const filters: IProjectFilterRequest = {
     isFeatured:
       rawFilters.isFeatured === 'true'
-        ? true : false,
+        ? true
+        : rawFilters.isFeatured === 'false'
+        ? false
+        : undefined,
     searchTerm:
       typeof rawFilters.searchTerm === 'string'
         ? rawFilters.searchTerm
         : undefined,
   };
-
-  // If filters are empty, set them to undefined to fetch all events
-  if (
-    Object.keys(filters).length === 0 ||
-    Object.values(filters).every((value) => value === undefined)
-  ) {
-    filters.isFeatured = undefined;
-    filters.searchTerm = undefined;
-  }
 
   const result = await ProjectService.getAllProjectFromDB(filters, options);
 
@@ -61,9 +53,10 @@ const getAllProjects = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     message: 'Projects retrieved successfully',
     meta: result.meta,
-    data: result.data,
+    data: result.data, // will be an array
   });
 });
+
 
 const updateProject = catchAsync(async (req, res) => {
   const { id } = req.params;
