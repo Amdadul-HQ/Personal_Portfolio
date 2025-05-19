@@ -1,22 +1,24 @@
 "use client"
 
-import React, { useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { motion, useScroll } from "framer-motion"
 import Image from "next/image"
 import { StaticImageData } from "next/image"
-
-// ICONS
-import reactIcon from "../../assets/react.svg"
-import NextIcon from "../../assets/next.svg"
+import { parseISO, intervalToDuration } from 'date-fns';
 
 // Type definition for a single experience
 interface ExperienceItem {
-  title: string
   company: string
+  title: string
+  companyImage: string
   description: string
   icon: StaticImageData | string
   technologies: string[]
   duration: string
+  startDate:string
+  endDate:string
+  skill:string[]
+  role:string
 }
 
 // Props for the TimelineItem component
@@ -26,32 +28,41 @@ interface TimelineItemProps {
   isLast: boolean
 }
 
-// Data
-const experiences: ExperienceItem[] = [
-  {
-    title: "Next.js Developer",
-    company: "Tridebits Technologies",
-    description:
-      "Worked as a Next.js developer at Tridebits Technologies since Jan 2025. Developed and maintained the 4 Dynamci website templates and internal applications. Implemented SEO best practices and improved website performance.",
-    icon: NextIcon,
-    technologies: ["Next js"],
-    duration: "Jan 2025 - Present",
-  },
-  {
-    title: "Full Stack Mern Developer",
-    company: "Sinss Digital Marketing Studio",
-    description:
-      "Currently working as a full-stack developer at Sinss Digital Marketing Studio since Dec 2023. Developed e-commerce, CRM, and project management applications using the MERN stack, Next.js, PostgreSQL, and MySQL. Designed and developed over 8 websites as the sole developer.",
-    icon: reactIcon,
-    technologies: ["MERN", "PostgreSQL", "MySQL"],
-    duration: "Dec 2023 - Dec 2024",
-  },
-]
+
+const getExperienceDuration = (start: string, end: string): string => {
+  const startDate = parseISO(start);
+  const endDate = parseISO(end);
+
+  const duration = intervalToDuration({ start: startDate, end: endDate });
+
+  const { years, months, days } = duration;
+
+  let result = '';
+  if (years) result += `${years} yr `;
+  if (months) result += `${months} mo `;
+  if (days) result += `${days} days`;
+
+  return result.trim() || '0 days';
+};
 
 // Main Component
 export default function Experience(): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [experiences,setExperiences] = useState([])
+  useEffect(()=>{
+      async function fetchBlog() {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experience`)
 
+          const data = await response.json()
+          const experienceDate = data.data
+          setExperiences(experienceDate)
+        } catch (error) {
+          console.error("Error fetching blog:", error)
+        } 
+      }
+      fetchBlog()
+    },[])
   return (
     <section className="min-h-screen bg-[#000] py-24 px-4 sm:px-6 lg:px-8 rounded-t-[80px]">
       <div className="max-w-6xl mx-auto">
@@ -103,7 +114,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
         }}
       >
         <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center">
-          <Image src={experience.icon || "/placeholder.svg"} alt="" className="w-3 h-3" />
+          <Image width={100} height={100} src={experience?.companyImage || "/placeholder.svg"} alt="" className="w-3 h-3" />
         </div>
       </motion.div>
 
@@ -115,18 +126,18 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
       >
         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
           <div>
-            <h3 className="text-2xl font-medium text-white">{experience.title}</h3>
+            <h3 className="text-2xl font-medium text-white">{experience.role}</h3>
             <p className="text-white/50">{experience.company}</p>
           </div>
           <div className="md:ml-auto">
-            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{experience.duration}</span>
+            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{getExperienceDuration(experience?.startDate,experience?.endDate)}</span>
           </div>
         </div>
 
         <p className="leading-relaxed text-white mb-4">{experience.description}</p>
 
         <div className="flex flex-wrap gap-2">
-          {experience.technologies.map((tech, techIndex) => (
+          {experience.skill.map((tech, techIndex) => (
             <motion.span
               key={techIndex}
               initial={{ opacity: 0, y: 20 }}

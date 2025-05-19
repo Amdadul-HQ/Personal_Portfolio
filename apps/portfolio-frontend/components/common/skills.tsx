@@ -2,64 +2,54 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 
-// Import all your SVG assets
-import html from "../../assets/html.svg"
-import css from "../../assets/css.svg"
-import js from "../../assets/js.svg"
-import react from "../../assets/react.svg"
-import express from "../../assets/express.svg"
-import figma from "../../assets/figma.svg"
-import framer from "../../assets/framer.svg"
-import github from "../../assets/github.svg"
-import mongo from "../../assets/mongo.svg"
-import mysql from "../../assets/mysql.svg"
-import next from "../../assets/next.svg"
-import node from "../../assets/node.svg"
-import npm from "../../assets/npm.svg"
-import postgresql from "../../assets/postgresql.svg"
-import postman from "../../assets/postman.svg"
-import redux from "../../assets/redux.svg"
-import tailwind from "../../assets/tailwind.svg"
-import typescript from "../../assets/typescript.svg"
 
-// Define skill categories with their respective skills
-const skillCategories = [
-  {
-    title: "Front-End Development :",
-    skills: [
-      { name: "JavaScript", icon: js },
-      { name: "React js", icon: react },
-      { name: "Next js", icon: next },
-      { name: "HTML", icon: html },
-      { name: "CSS", icon: css },
-      { name: "Tailwind CSS", icon: tailwind },
-      { name: "TypeScript", icon: typescript },
-      { name: "Redux", icon: redux },
-      { name: "Framer Motion", icon: framer },
-    ],
-  },
-  {
-    title: "Back-End Development :",
-    skills: [
-      { name: "Node js", icon: node },
-      { name: "Express js", icon: express },
-      { name: "Mongo db", icon: mongo },
-      { name: "MySQL", icon: mysql },
-      { name: "PostgreSQL", icon: postgresql },
-    ],
-  },
-  {
-    title: "Tools :",
-    skills: [
-      { name: "GitHub", icon: github },
-      { name: "Git", icon: github },
-      { name: "npm", icon: npm },
-      { name: "Postman", icon: postman },
-      { name: "Figma", icon: figma },
-    ],
-  },
-]
+interface RawSkill {
+  name: string;
+  image: string;
+  field: string;
+}
+
+interface Skill {
+  name: string;
+  icon: string;
+}
+
+interface SkillCategory {
+  title: string;
+  skills: Skill[];
+}
+
+const mapFieldToTitle = (field: string): string => {
+  switch (field.toUpperCase()) {
+    case 'FRONTEND':
+      return 'Front-End Development :';
+    case 'BACKEND':
+      return 'Back-End Development :';
+    case 'TOOLS':
+      return 'Tools :';
+    default:
+      return field; // fallback
+  }
+};
+
+const transformSkills = (dbSkills: RawSkill[]): SkillCategory[] => {
+  const grouped: Record<string, Skill[]> = {};
+
+  for (const skill of dbSkills) {
+    const title = mapFieldToTitle(skill.field);
+    if (!grouped[title]) {
+      grouped[title] = [];
+    }
+    grouped[title].push({ name: skill.name, icon: skill.image });
+  }
+
+  return Object.entries(grouped).map(([title, skills]) => ({
+    title,
+    skills,
+  }));
+};
 
 export default function Skills() {
   // Animation variants
@@ -109,6 +99,22 @@ export default function Skills() {
       },
     },
   }
+  const [skills, setSkills] = useState<SkillCategory[]>([]);
+    useEffect(()=>{
+        async function fetchBlog() {
+          try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skills`)
+  
+            const data = await response.json()
+            const skillsDate = data.data
+            setSkills(transformSkills(skillsDate))
+          } catch (error) {
+            console.error("Error fetching blog:", error)
+          } 
+        }
+        fetchBlog()
+      },[])
+
 
   return (
     <motion.section
@@ -142,11 +148,11 @@ export default function Skills() {
         </motion.div>
 
         <div className="space-y-12">
-          {skillCategories.map((category, index) => (
+          {skills.map((category:{title:string,skills:{icon:string,name:string}[]}, index) => (
             <motion.div key={index} variants={categoryVariants} className="space-y-4">
-              <h3 className="text-xl md:text-2xl font-medium text-white">{category.title}</h3>
+              <h3 className="text-xl md:text-2xl font-medium text-white">{category?.title}</h3>
               <div className="flex flex-wrap gap-3">
-                {category.skills.map((skill, skillIndex) => (
+                {category?.skills.map((skill, skillIndex) => (
                   <motion.div
                     key={skillIndex}
                     variants={skillVariants}

@@ -41,11 +41,25 @@ const images :ImageType[]  = [
      },
 ]
 
+type APIResponse<T> = {
+  data: T;
+  message?: string;
+  success?: boolean;
+}
+
+type ProjectType = {
+  id: string;
+  name: string;
+  description: string;
+  siteMockup: string; // assuming it's a string URL
+};
+
 export default function Projects() {
-     const [activeImage, setActiveImage] = useState<any| null>(null)
+     const [activeImage, setActiveImage] = useState<string | null>(null);
      const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
      const requestRef = useRef<number | null>(null)
      const prevCursorPosition = useRef({ x: 0, y: 0 })
+     const [featureProjects, setFeaturedProjects] = useState<ProjectType[]>([])
 
      const handleMouseMove = useCallback((e:any) => {
           const { clientX, clientY } = e
@@ -57,6 +71,20 @@ export default function Projects() {
           setCursorPosition({ x: newX, y: newY })
           prevCursorPosition.current = { x: newX, y: newY }
      }, [])
+
+useEffect(() => {
+  async function fetchBlog() {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?isFeatured=true`);
+      const data = await response.json();
+      const featuredProjectsData: ProjectType[] = data.data; // Type here
+      setFeaturedProjects(featuredProjectsData);
+    } catch (error) {
+      console.error("Error fetching blog:", error);
+    }
+  }
+  fetchBlog();
+}, []);
 
      useEffect(() => {
           const updateCursorPosition = (e:any) => {
@@ -107,11 +135,11 @@ export default function Projects() {
                          className="space-y-8 w-full h-full relative"
                          onMouseLeave={handleMouseLeave}
                     >
-                         {images.map((image, index) => (
+                         {featureProjects.map((image, index) => (
                               <motion.div
                                    key={image.id}
                                    className="cursor-pointer flex flex-col md:flex-row items-start justify-between gap-4 group"
-                                   onMouseEnter={() => handleImageHover(image?.src)}
+                                   onMouseEnter={() => handleImageHover(image?.siteMockup)}
                                    initial={{ opacity: 0, y: 30 }}
                                    whileInView={{ opacity: 1, y: 0 }}
                                    transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -119,14 +147,14 @@ export default function Projects() {
                               >
                                    <div className="space-y-2 min-w-80">
                                         <span className="text-sm text-gray-500">0{index + 1}</span>
-                                        <h3 className="text-sm font-medium">{image.alt}</h3>
+                                        <h3 className="text-sm font-medium">{image.name}</h3>
                                    </div>
                                    <div className="flex items-center justify-between w-full border-b pb-4 group-hover:border-green-500 transition-colors duration-300">
                                         <h2 className="text-xl md:text-3xl lg:text-3xl font-light group-hover:text-green-500 transition-colors duration-300">
                                              {image.description}
                                         </h2>
                                         <Link
-                                             href={`/projects/${image.slug}`}
+                                             href={`/projects/${image.id}`}
                                              className="inline-flex items-center text-green-500 hover:text-green-400 transition-colors"
                                             //  whileHover={{ x: 5 }}
                                             // onMouseOver={{x:5}}
@@ -142,9 +170,9 @@ export default function Projects() {
                <AnimatePresence>
                     {activeImage && (
                          <motion.img
-                              key={activeImage.id}
-                              src={activeImage?.src}
-                              alt={activeImage.alt}
+                              key={activeImage}
+                              src={activeImage}
+                              alt={activeImage}
                               className="fixed border-4 border-green-200  object-cover pointer-events-none z-10 w-96 rounded-lg shadow-lg"
                               style={{
                                    left: `${cursorPosition.x}px`,

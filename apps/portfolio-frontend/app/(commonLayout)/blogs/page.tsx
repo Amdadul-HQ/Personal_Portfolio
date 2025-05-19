@@ -26,8 +26,6 @@ const Blogs = async() => {
 
     const blogs = await getBlogs();
 
-    console.log(blogs)
-
     return <BlogsPage blogs={blogs}/>
 };
 

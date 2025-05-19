@@ -7,6 +7,7 @@ import essentialharvest from '../../assets/projects/eh1.png'
 import janvry from '../../assets/projects/janvry.png'
 import cursify from '../../assets/projects/cursify.png'
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 // Sample blog data - replace with your actual data source
 const popularBlogs = [
@@ -41,6 +42,7 @@ const popularBlogs = [
 ]
 
 export function PopularBlogs() {
+  const [blogs,setBlogs] = useState([])
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -65,6 +67,23 @@ export function PopularBlogs() {
       },
     },
   }
+
+  useEffect(()=>{
+    async function fetchBlog() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs?isFeatured=true`)
+
+        const data = await response.json()
+        const blogData = data.data
+        setBlogs(blogData)
+      } catch (error) {
+        console.error("Error fetching blog:", error)
+      } 
+    }
+    fetchBlog()
+  },[])
+
+
 
   return (
     <section className="w-full min-h-screen bg-[#EFEFEF] flex py-24 justify-center rounded-tr-[40px] md:rounded-tr-[80px] rounded-tl-[40px] md:rounded-tl-[80px] px-4">
@@ -103,7 +122,7 @@ export function PopularBlogs() {
           initial="hidden"
           animate="visible"
         >
-          {popularBlogs.map((blog) => (
+          {blogs?.map((blog:any) => (
             <motion.div
               key={blog.id}
               variants={itemVariants}
@@ -122,10 +141,10 @@ export function PopularBlogs() {
               </motion.div>
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-2 line-clamp-2">{blog.title}</h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">{blog.excerpt}</p>
+                <p className="text-gray-600 mb-4 line-clamp-3">{blog.shortDescription}</p>
                 <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                   <Link
-                    href={`/blog`}
+                    href={`/blogs/${blog.id}`}
                     className="inline-flex items-center text-green-500 font-medium hover:text-green-600 transition-colors"
                   >
                     Read More
