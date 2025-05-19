@@ -6,7 +6,7 @@ import "./fonts.css";
 
 
 export const metadata : Metadata = {
-  title: "AMDADUL HQ | Portfolio",
+  title: "AMDADUL HQ | Login",
   description: "Creative Web Developer",
 };
 
