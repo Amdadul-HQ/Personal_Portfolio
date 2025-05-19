@@ -9,14 +9,14 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: ['http://localhost:3000',], credentials: true }));
+app.use(cors());
 
 
 app.use(cookeParser());
 
 app.get('/', (req: Request, res: Response) => {
   res.send({
-    message: 'Event Planner server is Running',
+    message: 'Portfolio server is Running',
   });
 });
 

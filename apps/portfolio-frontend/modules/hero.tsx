@@ -14,7 +14,7 @@ const Hero =() => {
   const words = ["creative", "interactive", "beautiful", "modern"]
 
   return (
-    <div className="relative min-h-[90vh] flex flex-col items-center">
+    <div className="relative min-h-screen justify-center flex flex-col items-center">
         <motion.div
           style={{ opacity, y }}
           className="container relative z-10 mx-auto px-4 py-24 sm:px-6 lg:px-8"

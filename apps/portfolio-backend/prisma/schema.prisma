@@ -15,14 +15,16 @@ datasource db {
 }
 
 
-model USER {
+model User {
   id       String       @id       @default(uuid())
   name     String       
   email    String       @unique
   role     UserRole     @default(USER)
+  password String
+
 }
 
-model BLOG {
+model Blog {
   id                String       @id       @default(uuid())
   title             String       
   shortDescription  String
@@ -30,14 +32,14 @@ model BLOG {
   description       String
   topic             String
   readingTime       String
-  isFeatured         Boolean         @default(false)
+  isFeatured        Boolean         @default(false)
   publishDate       DateTime
   category          String
   brand             String[]
 }
 
 
-model PROJECT {
+model Project {
  id                 String       @id       @default(uuid())
  name               String
  description        String
@@ -57,7 +59,7 @@ model PROJECT {
  updatedAt          DateTime        @updatedAt
 } 
 
-model EXPERIENCE {
+model Experience {
   id                 String       @id       @default(uuid())
   role               String
   companyImage       String
@@ -70,15 +72,15 @@ model EXPERIENCE {
   updatedAt          DateTime        @updatedAt
 }
 
-model SKILL {
+model Skill {
   id                 String       @id       @default(uuid())
-  field              FIELDTYPE
+  field              FieldType
   name               String
   image              String
 }
 
 
-enum FIELDTYPE {
+enum FieldType {
   FRONTEND
   BACKEND
   DEVOPS
