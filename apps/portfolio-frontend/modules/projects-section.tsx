@@ -3,12 +3,23 @@
 import { ProjectCard } from "@/components/ui/project-card"
 import { Button } from "@workspace/ui/components/button"
 import { useState } from "react"
-import essentialharvest from '../assets/projects/eh1.png'
-import janvry from '../assets/projects/janvry.png'
-import cursify from '../assets/projects/cursify.png'
+import essentialharvest from '@/assets/projects/eh1.png'
+import janvry from '@/assets/projects/janvry.png'
+import cursify from '@/assets/projects/cursify.png'
+import type { StaticImageData } from 'next/image'
 
+interface Project {
+  slug: string;
+  title: string;
+  description: string;
+  image: any; // ← Fix is here
+  category: string;
+  technologies: string[];
+  demoUrl: string;
+  codeUrl: string;
+}
 // Sample project data - in a real portfolio, this would come from a CMS or database
-const allProjects = [
+const allProjects : Project[] = [
   {
     slug: "janvry-studio-3d-website-development",
     title: "E-commerce Website",
@@ -99,7 +110,7 @@ export function ProjectsSection() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProjects.map((project) => (
+        {filteredProjects.map((project:Project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}
       </div>

@@ -336,7 +336,7 @@ const ProjectDetails = () => {
           className="mt-16"
         >
           <Image
-            src={project?.image}
+            src={project?.image || "/fallback.png"}
             alt={project?.name || 'Project Mockup'}
             width={1200}
             height={800}

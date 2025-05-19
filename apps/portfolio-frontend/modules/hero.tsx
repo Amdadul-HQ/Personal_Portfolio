@@ -6,7 +6,6 @@ import Image from 'next/image'
 import profile from '../assets/portfolio.jpeg'
 import { InteractiveHoverButton } from '@/components/ui/InteractiveHoverButton'
 import { ShimmerButton } from '@/components/ui/shimmer-button'
-import {BorderBeam} from '@workspace/ui/components/magicui/border-beam'
 const Hero =() => {
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 200], [1, 0])
@@ -28,16 +27,6 @@ const Hero =() => {
             >
               <ShimmerButton shimmerColor='#BCF8D3' shimmerSize='6px' shimmerDuration='1s' className='p-[1px] mx-auto'> 
                 <div className='w-[200px] h-[200px] relative overflow-hidden rounded-full mx-auto'>
-                  <BorderBeam
-                  size={40}
-                  initialOffset={20}
-                  className="from-transparent via-yellow-500 to-transparent"
-                  transition={{
-                    type: "spring",
-                    stiffness: 60,
-                    damping: 20,
-                  }}
-                />
                 <Image
                 src={profile}
                 className='w-full absolute -top-12'

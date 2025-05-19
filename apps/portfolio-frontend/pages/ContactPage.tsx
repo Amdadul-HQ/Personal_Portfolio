@@ -7,7 +7,7 @@ import Link from "next/link";
 import { RevealLinks } from "@/components/common/RevealLinks";
 import Image from "next/image";
 
-export const ContactPage = () => {
+const ContactPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -64,3 +64,6 @@ export const ContactPage = () => {
     </>
   );
 };
+
+
+export default ContactPage

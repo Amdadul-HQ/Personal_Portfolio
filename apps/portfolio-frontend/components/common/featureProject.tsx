@@ -10,7 +10,7 @@ import Link from 'next/link'
 
 type ImageType = {
   id?: number;
-  src: string; // If using static imports like in your case, `StaticImageData` is more accurate
+  src: object; // If using static imports like in your case, `StaticImageData` is more accurate
   alt?: string;
   description?: string;
   slug?: string;
@@ -42,7 +42,7 @@ const images :ImageType[]  = [
 ]
 
 export default function Projects() {
-     const [activeImage, setActiveImage] = useState<ImageType| null>(null)
+     const [activeImage, setActiveImage] = useState<any| null>(null)
      const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
      const requestRef = useRef<number | null>(null)
      const prevCursorPosition = useRef({ x: 0, y: 0 })
@@ -143,7 +143,7 @@ export default function Projects() {
                     {activeImage && (
                          <motion.img
                               key={activeImage.id}
-                              src={activeImage.src}
+                              src={activeImage?.src}
                               alt={activeImage.alt}
                               className="fixed border-4 border-green-200  object-cover pointer-events-none z-10 w-96 rounded-lg shadow-lg"
                               style={{

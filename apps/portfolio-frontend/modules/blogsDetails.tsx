@@ -92,8 +92,8 @@ const blogData = [
 
 export default function BlogDetails() {
   const slug  = useParams<any>()
-  const [blog, setBlog] = useState<{title:string,summary:string,image:string,topic:string,content:string,readingTime:string,date?:string,publishDate:string,categories:string[],tags:string[]|null}>(null)
-
+  // const [blog, setBlog] = useState<{title:string,summary:string,image:string,topic:string,content:string,readingTime:string,date?:string,publishDate:string,categories:string[],tags:string[]|null}>({title:'',summary:'',image:'',topic:'',content:'',readingTime:'',date:'',publishDate:'',categories:[],tags:[]})
+  const [blog,setBlog] = useState<any>()
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0.1, 0.2], [1, 0])
   const scale = useTransform(scrollYProgress, [0.1, 0.2], [1, 0.95])
@@ -165,7 +165,7 @@ export default function BlogDetails() {
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">CATEGORIES</p>
-                {blog.categories.map((item, index) => (
+                {blog.categories.map((item:string, index:number) => (
                   <p key={index} className="font-medium text-neutral-800">{item}</p>
                 ))}
               </div>
@@ -177,7 +177,7 @@ export default function BlogDetails() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             >
-              {blog.tags.map((tag, index) => (
+              {blog?.tags.map((tag:string, index:number) => (
                 <span
                   key={index}
                   className="rounded-full bg-gradient-to-r from-orange-500 to-orange-300 px-4 py-1.5 text-sm text-white font-medium"
