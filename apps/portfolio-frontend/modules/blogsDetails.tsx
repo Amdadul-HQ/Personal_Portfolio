@@ -92,30 +92,40 @@ const blogData = [
 
 export default function BlogDetails() {
   const slug  = useParams<any>()
-  // const [blog, setBlog] = useState<{title:string,summary:string,image:string,topic:string,content:string,readingTime:string,date?:string,publishDate:string,categories:string[],tags:string[]|null}>({title:'',summary:'',image:'',topic:'',content:'',readingTime:'',date:'',publishDate:'',categories:[],tags:[]})
   const [blog,setBlog] = useState<any>()
   const { scrollYProgress } = useScroll()
+  
   const opacity = useTransform(scrollYProgress, [0.1, 0.2], [1, 0])
   const scale = useTransform(scrollYProgress, [0.1, 0.2], [1, 0.95])
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
-    const currentBlogIndex = blogData?.findIndex(blog => blog.slug === slug.slug)
-    if (currentBlogIndex !== -1) {
-      setBlog(blogData[currentBlogIndex])
+    async function fetchBlog() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug?.slug}`)
+
+        const data = await response.json()
+        const blogData = data.data
+        setBlog(blogData)
+
+      } catch (error) {
+        console.error("Error fetching blog:", error)
+        // toast({
+        //   title: "Error",
+        //   description: "Failed to fetch blog data. Please try again.",
+        //   variant: "destructive",
+        // })
+      } 
     }
-  }, [slug])
+
+    fetchBlog()
+  }, [slug?.slug])
 
   if (!blog) return null
 
   return (
     <>
-     {/* <SEO
-        title={blog.metaTitle}
-        description={blog.metaDescription}
-        path={`/blogs/${blog.slug}`}
-      /> */}
     <div className="relative bg-gradient-to-b from-orange-50 to-white min-h-screen">
       <motion.section
         style={{ opacity, scale }}
@@ -125,11 +135,11 @@ export default function BlogDetails() {
           {blog?.title}<span className="text-orange-500">.</span>
         </h2>
         <p className="mt-4 text-center text-lg sm:text-xl md:text-2xl text-neutral-600 max-w-2xl mx-auto">
-          {blog?.summary}
+          {blog?.shortDescription}
         </p>
       </motion.section>
 
-      <MaskImage src={blog.image} />
+      <MaskImage src={blog.thumbnail} />
 
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 py-8 md:py-16">
         <motion.div
@@ -139,7 +149,7 @@ export default function BlogDetails() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <div className="rounded-2xl p-6 md:p-8 ">
-            <p className="text-lg md:text-xl leading-relaxed text-neutral-700">{blog.content}</p>
+            <p className="text-lg md:text-xl leading-relaxed text-neutral-700">{blog.description}</p>
           </div>
         </motion.div>
 
@@ -161,13 +171,11 @@ export default function BlogDetails() {
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">PUBLISH DATE</p>
-                <p className="font-medium text-neutral-800">{blog.publishDate || blog.date}</p>
+                <p className="font-medium text-neutral-800">{new Date(blog.publishDate).toLocaleDateString()}</p>
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">CATEGORIES</p>
-                {blog.categories.map((item:string, index:number) => (
-                  <p key={index} className="font-medium text-neutral-800">{item}</p>
-                ))}
+                <p className="font-medium text-neutral-800">{blog.category}</p>
               </div>
             </div>
 
@@ -177,7 +185,7 @@ export default function BlogDetails() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             >
-              {blog?.tags.map((tag:string, index:number) => (
+              {blog?.brand.map((tag:string, index:number) => (
                 <span
                   key={index}
                   className="rounded-full bg-gradient-to-r from-orange-500 to-orange-300 px-4 py-1.5 text-sm text-white font-medium"
@@ -189,27 +197,6 @@ export default function BlogDetails() {
           </div>
         </motion.div>
       </div>
-
-      {/* <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 flex  sm:flex-row justify-between items-center gap-4">
-        {prevBlog && (
-          <Link
-            to={`/blogs/${prevBlog.slug}`}
-            className="flex w-full sm:w-auto items-center justify-center sm:justify-start px-6 py-3 bg-orange-100 hover:bg-orange-200 rounded-full text-orange-600 hover:text-orange-700 transition-colors duration-300 ease-in-out"
-          >
-            <ChevronLeft className="w-5 h-5 mr-2 flex-shrink-0" />
-            <span className="truncate">Previous</span>
-          </Link>
-        )}
-        {nextBlog && (
-          <Link
-            to={`/blogs/${nextBlog.slug}`}
-            className="flex w-full sm:w-auto items-center justify-center sm:justify-end px-6 py-3 bg-orange-100 hover:bg-orange-200 rounded-full text-orange-600 hover:text-orange-700 transition-colors duration-300 ease-in-out"
-          >
-            <span className="truncate">Next</span>
-            <ChevronRight className="w-5 h-5 ml-2 flex-shrink-0" />
-          </Link>
-        )}
-      </div> */}
 
       <RevealLinks />
     </div>
