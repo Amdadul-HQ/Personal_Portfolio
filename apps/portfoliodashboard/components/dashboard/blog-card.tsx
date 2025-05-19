@@ -8,6 +8,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { DeleteDialog } from "./delete-dialog"
+import { getSession } from "@/app/action/auth"
 
 type BlogCardProps = {
   blog: {
@@ -29,8 +30,16 @@ export function BlogCard({ blog }: BlogCardProps) {
 
   const handleDelete = async () => {
     try {
+       const accessToken = await getSession()
+               if(!accessToken){
+                return
+              }
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${blog.id}`, {
         method: "DELETE",
+        headers:{
+         Authorization: `${accessToken.token}`,   
+        },
+        credentials:"include"
       })
 
       if (!response.ok) {

@@ -10,6 +10,7 @@ import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
 import { Badge } from "@workspace/ui/components/badge"
 import { DeleteDialog } from "@/components/dashboard/delete-dialog"
+import { getSession } from "@/app/action/auth"
 
 type ProjectCardProps = {
   project: {
@@ -33,8 +34,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   const handleDelete = async () => {
     try {
+       const accessToken = await getSession()
+               if(!accessToken){
+                return
+              }
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${project.id}`, {
         method: "DELETE",
+        headers:{
+         Authorization: `${accessToken.token}`,   
+        },
+        credentials:"include"
       })
 
       if (!response.ok) {

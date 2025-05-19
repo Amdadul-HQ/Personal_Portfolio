@@ -10,6 +10,7 @@ const createSkill = async(payload:Skill,userId:string) => {
 }
 
 const getAllSkills = async() => {
+ 
     const result = await prisma.skill.findMany()
     return result
 }

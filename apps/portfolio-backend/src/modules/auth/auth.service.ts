@@ -38,6 +38,13 @@ if(authSecret !== config.authSecret){
   if (!hasPassword) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'bcrypt solt generate problem');
   }
+
+  const userExist = await prisma.user.count()
+
+  if(userExist ===1){
+    throw new ApiError(httpStatus.BAD_REQUEST,'over Limited')
+  }
+
   const registeredUser = await prisma.user.create({
     data: {
       name,

@@ -9,6 +9,7 @@ import { Button } from "@workspace/ui/components/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table"
 import { Badge } from "@workspace/ui/components/badge"
 import { DeleteDialog } from "@/components/dashboard/delete-dialog"
+import { getSession } from "@/app/action/auth"
 
 type Skill = {
   id: string
@@ -43,15 +44,22 @@ export function SkillsTable({ skills }: SkillsTableProps) {
 
   const handleDelete = async () => {
     if (!selectedSkill) return
-
+    const accessToken = await getSession()
+     if(!accessToken){
+      return
+     }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skills/${selectedSkill.id}`, {
         method: "DELETE",
+        headers:{
+         Authorization: `${accessToken.token}`,   
+        },
+        credentials:"include"
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to delete skill")
-      }
+      // if (!response.ok) {
+      //   throw new Error("Failed to delete skill")
+      // }
 
       // Refresh the page to show updated data
       router.refresh()

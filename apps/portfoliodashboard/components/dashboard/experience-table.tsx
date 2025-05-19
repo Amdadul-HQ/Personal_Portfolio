@@ -9,6 +9,7 @@ import Link from "next/link"
 import { Button } from "@workspace/ui/components/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table"
 import { DeleteDialog } from "@/components/dashboard/delete-dialog"
+import { getSession } from "@/app/action/auth"
 
 type Experience = {
   id: string
@@ -32,10 +33,18 @@ export function ExperienceTable({ experiences }: ExperienceTableProps) {
 
   const handleDelete = async () => {
     if (!selectedExperience) return
+    const accessToken = await getSession()
+         if(!accessToken){
+          return
+        }
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experience/${selectedExperience.id}`, {
         method: "DELETE",
+        headers:{
+         Authorization: `${accessToken.token}`,   
+        },
+        credentials:"include"
       })
 
 
