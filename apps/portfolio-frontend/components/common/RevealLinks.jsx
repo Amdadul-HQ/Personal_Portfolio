@@ -18,10 +18,10 @@ export const RevealLinks = () => {
       </div>
       <div>
         <div className="flex flex-col gap-y-3 mb-3">
-        <FlipLink href="https://www.linkedin.com/in/durgesh-bachhav-914bb8337/">Linkedin</FlipLink>
-        <FlipLink href="https://www.instagram.com/durgesh.bachhav_">Github</FlipLink>
-        <FlipLink href="https://www.instagram.com/durgesh.bachhav_">Twitter</FlipLink>
-        <FlipLink href="https://www.instagram.com/durgesh.bachhav_">Facebook</FlipLink>
+        <FlipLink href="https://www.linkedin.com/in/Amdadul-Haque-Bhuiyan">Linkedin</FlipLink>
+        <FlipLink href="https://github.com/Amdadul-HQ">Github</FlipLink>
+        <FlipLink href="https://x.com/hoque_amdaul">Twitter</FlipLink>
+        <FlipLink href="https://www.facebook.com/amdadul.haque.54540218">Facebook</FlipLink>
         </div>
       </div>
       </div>
