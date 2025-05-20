@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react"
 import { motion, useScroll } from "framer-motion"
 import Image from "next/image"
 import { StaticImageData } from "next/image"
-import { parseISO, intervalToDuration } from 'date-fns';
 import getDuration from "@/utils/function/durationFunction"
 
 // Type definition for a single experience
@@ -66,7 +65,7 @@ export default function Experience(): React.ReactElement {
           {/* Timeline vertical line */}
           <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-green-600/30" />
 
-          {experiences.map((experience, index) => (
+          {experiences?.map((experience, index) => (
             <TimelineItem
               key={index}
               experience={experience}

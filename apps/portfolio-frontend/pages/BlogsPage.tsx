@@ -48,7 +48,7 @@ const BlogsPage = ({blogs}:any) => {
           initial="hidden"
           animate="visible"
         >
-          {blogs.map((blog:any) => (
+          {blogs?.map((blog:any) => (
             <motion.div
               key={blog.id}
               variants={itemVariants}

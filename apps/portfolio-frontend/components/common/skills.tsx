@@ -148,7 +148,7 @@ export default function Skills() {
         </motion.div>
 
         <div className="space-y-12">
-          {skills.map((category:{title:string,skills:{icon:string,name:string}[]}, index) => (
+          {skills?.map((category:{title:string,skills:{icon:string,name:string}[]}, index) => (
             <motion.div key={index} variants={categoryVariants} className="space-y-4">
               <h3 className="text-xl md:text-2xl font-medium text-white">{category?.title}</h3>
               <div className="flex flex-wrap gap-3">
