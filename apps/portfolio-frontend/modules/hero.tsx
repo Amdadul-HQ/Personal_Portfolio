@@ -6,6 +6,7 @@ import Image from 'next/image'
 import profile from '../assets/portfolio.jpeg'
 import { InteractiveHoverButton } from '@/components/ui/InteractiveHoverButton'
 import { ShimmerButton } from '@/components/ui/shimmer-button'
+import Link from 'next/link'
 const Hero =() => {
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 200], [1, 0])
@@ -73,22 +74,18 @@ const Hero =() => {
             </motion.div>
           </div>
           <div className='flex items-center gap-x-3 mt-3 justify-center'>
+          <Link href="https://drive.google.com/file/d/11s-a26rikQlVfEZs64oLOAEmC2yyxdc6/view?usp=sharing" target='_blnk'>
           <ShimmerButton> 
             <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
             Resume
             </span>
           </ShimmerButton>
+          </Link>
+          <Link href='/contact'>
           <InteractiveHoverButton>Hire Me</InteractiveHoverButton>
+          </Link>
           </div>
         </motion.div>
-      {/* </ImageMouseTrail> */}
-
-      {/* Gradient overlays */}
-      {/* <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background/40" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" /> */}
-
-      {/* Background pattern */}
-      {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] dark:bg-gray-950 dark:[background:radial-gradient(#1a1a1a_1px,transparent_1px)]" /> */}
     </div>
   )
 }

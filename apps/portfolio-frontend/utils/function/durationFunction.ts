@@ -1,4 +1,4 @@
-import { intervalToDuration, parseISO } from "date-fns";
+import { intervalToDuration, parseISO,format } from "date-fns";
 
 const getDuration = (start: string, end: string): string => {
   const startDate = parseISO(start);
@@ -17,3 +17,14 @@ const getDuration = (start: string, end: string): string => {
 };
 
 export default getDuration
+
+
+export const formatDateRange = (start: string, end: string): string => {
+  const startDate = parseISO(start);
+  const endDate = parseISO(end);
+
+  const formattedStart = format(startDate, "MMM yyyy");
+  const formattedEnd = format(endDate, "MMM yyyy");
+
+  return `${formattedStart} - ${formattedEnd}`;
+};

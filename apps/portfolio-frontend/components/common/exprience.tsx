@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { motion, useScroll } from "framer-motion"
 import Image from "next/image"
 import { StaticImageData } from "next/image"
-import getDuration from "@/utils/function/durationFunction"
+import getDuration, { formatDateRange } from "@/utils/function/durationFunction"
 
 // Type definition for a single experience
 interface ExperienceItem {
@@ -116,7 +116,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
             <p className="text-white/50">{experience.company}</p>
           </div>
           <div className="md:ml-auto">
-            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{getDuration(experience?.startDate,experience?.endDate)}</span>
+            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{formatDateRange(experience?.startDate,experience?.endDate)}</span>
           </div>
         </div>
 
