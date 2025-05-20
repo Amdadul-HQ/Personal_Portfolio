@@ -5,6 +5,7 @@ import { motion, useScroll } from "framer-motion"
 import Image from "next/image"
 import { StaticImageData } from "next/image"
 import { parseISO, intervalToDuration } from 'date-fns';
+import getDuration from "@/utils/function/durationFunction"
 
 // Type definition for a single experience
 interface ExperienceItem {
@@ -29,21 +30,7 @@ interface TimelineItemProps {
 }
 
 
-const getExperienceDuration = (start: string, end: string): string => {
-  const startDate = parseISO(start);
-  const endDate = parseISO(end);
 
-  const duration = intervalToDuration({ start: startDate, end: endDate });
-
-  const { years, months, days } = duration;
-
-  let result = '';
-  if (years) result += `${years} yr `;
-  if (months) result += `${months} mo `;
-  if (days) result += `${days} days`;
-
-  return result.trim() || '0 days';
-};
 
 // Main Component
 export default function Experience(): React.ReactElement {
@@ -130,7 +117,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
             <p className="text-white/50">{experience.company}</p>
           </div>
           <div className="md:ml-auto">
-            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{getExperienceDuration(experience?.startDate,experience?.endDate)}</span>
+            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{getDuration(experience?.startDate,experience?.endDate)}</span>
           </div>
         </div>
 

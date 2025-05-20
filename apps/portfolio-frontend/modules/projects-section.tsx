@@ -2,98 +2,73 @@
 
 import { ProjectCard } from "@/components/ui/project-card"
 import { Button } from "@workspace/ui/components/button"
-import { useState } from "react"
-import essentialharvest from '@/assets/projects/eh1.png'
-import janvry from '@/assets/projects/janvry.png'
-import cursify from '@/assets/projects/cursify.png'
-import type { StaticImageData } from 'next/image'
+import { useEffect, useState } from "react"
 
-interface Project {
-  slug: string;
-  title: string;
-  description: string;
-  image: any; // ← Fix is here
-  category: string;
-  technologies: string[];
-  demoUrl: string;
-  codeUrl: string;
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'USER' | 'ADMIN' | 'MODERATOR'; // Adjust based on your roles
+  password: string;
 }
-// Sample project data - in a real portfolio, this would come from a CMS or database
-const allProjects : Project[] = [
-  {
-    slug: "janvry-studio-3d-website-development",
-    title: "E-commerce Website",
-    description:
-      "A fully responsive e-commerce platform with product filtering, cart functionality, and payment integration.",
-    image: essentialharvest,
-    category: "Web Development",
-    technologies: ["React", "Next.js", "Tailwind CSS", "Stripe"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-  {
-    slug: "2",
-    title: "Portfolio Website",
-    description: "A personal portfolio website showcasing my projects and skills with a modern, minimalist design.",
-    image: janvry,
-    category: "Web Design",
-    technologies: ["HTML", "CSS", "JavaScript", "GSAP"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-  {
-    slug: "3",
-    title: "Task Management App",
-    description:
-      "A productivity application for managing tasks, projects, and team collaboration with real-time updates.",
-    image: cursify,
-    category: "Web Application",
-    technologies: ["React", "Firebase", "Material UI", "Redux"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-  {
-    slug: "4",
-    title: "Mobile Fitness App",
-    description: "A cross-platform mobile application for tracking workouts, nutrition, and fitness progress.",
-    image: essentialharvest,
-    category: "Mobile Development",
-    technologies: ["React Native", "Expo", "Firebase", "Redux"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-  {
-    slug: "5",
-    title: "Blog Platform",
-    description: "A content management system for publishing articles and blog posts with user authentication.",
-    image: janvry,
-    category: "Web Development",
-    technologies: ["Next.js", "MongoDB", "Tailwind CSS", "NextAuth"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-  {
-    slug: "6",
-    title: "Weather Dashboard",
-    description: "A weather application that provides real-time weather data and forecasts for locations worldwide.",
-    image: cursify,
-    category: "Web Application",
-    technologies: ["JavaScript", "OpenWeather API", "Chart.js", "CSS"],
-    demoUrl: "#",
-    codeUrl: "#",
-  },
-]
 
-// Get unique categories from projects
-const categories = ["All", ...new Set(allProjects.map((project) => project.category))]
+export interface IProject {
+  id: string;
+  name: string;
+  description: string;
+  siteMockup: string;
+  techonology: string[]; // Typo preserved if API returns it this way
+  features: string[];
+  services: string[];
+  elements: number;
+  totalCode: number;
+  gitHubLink: string;
+  liveLink: string;
+  type: string;
+  isFeatured: boolean;
+  projectStartDate: string; // ISO date string
+  projectEndDate: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  user: IUser;
+}
+
 
 export function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = useState("All")
+    const [activeCategory, setActiveCategory] = useState("All")
+  const [projects, setProjects] = useState<IProject[]>([])
+  const [loading, setLoading] = useState(true)
 
+  const categories = ["All", "Web Development", "Web Design", "Web Application", "Mobile Development"]
+
+  const getProjects = async (category: string) => {
+    setLoading(true)
+    try {
+      const queryParam = category !== "All" ? `?type=${encodeURIComponent(category)}` : ""
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects${queryParam}`, {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      const data = await res.json()
+      setProjects(data.data || [])
+    } catch (error) {
+      console.error("Error fetching projects:", error)
+      setProjects([])
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    getProjects(activeCategory)
+  }, [activeCategory])
   // Filter projects based on active category
-  const filteredProjects =
-    activeCategory === "All" ? allProjects : allProjects.filter((project) => project.category === activeCategory)
-
+  // const filteredProjects =
+  //   activeCategory === "All" ? allProjects : allProjects.filter((project) => project.category === activeCategory)
+  
+  console.log(projects)
   return (
     <div className="container max-w-7xl mx-auto">
       <div className="flex flex-wrap justify-center gap-2 mb-12">
@@ -109,11 +84,15 @@ export function ProjectsSection() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProjects.map((project:Project) => (
-          <ProjectCard key={project.slug} project={project} />
-        ))}
-      </div>
+      {loading ? (
+        <p className="text-center">Loading projects...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project: IProject) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
