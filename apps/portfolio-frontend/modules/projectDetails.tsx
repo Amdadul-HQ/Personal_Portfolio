@@ -211,7 +211,7 @@ const ProjectDetails = () => {
             <div>
               <h2 className="text-3xl font-bold mb-4">Links</h2>
               <a 
-                href={`https://${project?.liveLink}`} 
+                href={`${project?.liveLink}`} 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="inline-block bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition-colors"
@@ -219,7 +219,7 @@ const ProjectDetails = () => {
                 Visit Website
               </a>
               <a 
-                href={`https://${project?.gitHubLink}`} 
+                href={`${project?.gitHubLink}`} 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="inline-block bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition-colors"
