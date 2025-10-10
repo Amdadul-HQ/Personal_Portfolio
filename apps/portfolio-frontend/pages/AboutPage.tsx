@@ -74,7 +74,7 @@ const AboutsPage = () => {
                 words={words}
               />{" "}
               <span className="block mt-4">
-                Developer living in Nashik & Focus on making digital experiences
+                Full Stack Developer living in Dhaka & Focus on making digital experiences
                 that are easy to use, enjoyable & get the job done.
               </span>
             </div>
