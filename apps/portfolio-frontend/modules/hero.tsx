@@ -2,10 +2,9 @@
 
 import { FlipWords } from '@/components/ui/flip-wors'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import Image from 'next/image'
-import profile from '../assets/portfolio.jpeg'
 import { InteractiveHoverButton } from '@/components/ui/InteractiveHoverButton'
 import { ShimmerButton } from '@/components/ui/shimmer-button'
+import HeroTechBeams from '@/components/common/heroTechBeams'
 import Link from 'next/link'
 const Hero =() => {
   const { scrollY } = useScroll()
@@ -26,15 +25,7 @@ const Hero =() => {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <ShimmerButton shimmerColor='#BCF8D3' shimmerSize='6px' shimmerDuration='1s' className='p-[1px] mx-auto'> 
-                <div className='w-[200px] h-[200px] relative overflow-hidden rounded-full mx-auto'>
-                <Image
-                src={profile}
-                className='w-full absolute -top-12'
-                alt='Amdadul Image'
-                />
-              </div>
-              </ShimmerButton>
+              <HeroTechBeams />
               <div className="space-y-4 flex flex-col justify-center items-center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
