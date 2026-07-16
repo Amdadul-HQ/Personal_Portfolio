@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, Briefcase, ChevronLeft, ChevronRight, Code, FileCode, Home, LogOut, Menu, User } from "lucide-react"
+import { BookOpen, Bot, Briefcase, ChevronLeft, ChevronRight, Code, FileCode, Home, LogOut, Menu, User } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
 import { logout } from "@/app/action/auth"
@@ -62,6 +62,7 @@ export function DashboardSidebar({ user }: SidebarProps) {
     { name: "Projects", href: "/dashboard/projects", icon: Code },
     { name: "Experience", href: "/dashboard/experience", icon: Briefcase },
     { name: "Skills", href: "/dashboard/skills", icon: FileCode },
+    { name: "AI Assistant", href: "/dashboard/ai-assistant", icon: Bot },
   ]
 
   return (
