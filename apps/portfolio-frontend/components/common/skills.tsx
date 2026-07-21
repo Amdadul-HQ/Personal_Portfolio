@@ -35,6 +35,7 @@ const mapFieldToTitle = (field: string): string => {
 };
 
 const transformSkills = (dbSkills: RawSkill[]): SkillCategory[] => {
+  if (!Array.isArray(dbSkills)) return [];
   const grouped: Record<string, Skill[]> = {};
 
   for (const skill of dbSkills) {

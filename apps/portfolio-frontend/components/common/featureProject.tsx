@@ -77,7 +77,7 @@ useEffect(() => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects?isFeatured=true`);
       const data = await response.json();
-      const featuredProjectsData: ProjectType[] = data.data; // Type here
+      const featuredProjectsData: ProjectType[] = Array.isArray(data?.data) ? data.data : [];
       setFeaturedProjects(featuredProjectsData);
     } catch (error) {
       console.error("Error fetching blog:", error);
