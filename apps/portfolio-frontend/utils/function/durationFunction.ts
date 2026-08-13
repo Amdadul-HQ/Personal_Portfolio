@@ -24,7 +24,8 @@ export const formatDateRange = (start: string, end: string): string => {
   const endDate = parseISO(end);
 
   const formattedStart = format(startDate, "MMM yyyy");
-  const formattedEnd = format(endDate, "MMM yyyy");
+  // Ongoing roles are stored with a far-future endDate — render those as "Present".
+  const formattedEnd = endDate > new Date() ? "Present" : format(endDate, "MMM yyyy");
 
   return `${formattedStart} - ${formattedEnd}`;
 };

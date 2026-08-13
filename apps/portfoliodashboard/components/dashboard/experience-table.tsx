@@ -91,7 +91,8 @@ export function ExperienceTable({ experiences }: ExperienceTableProps) {
                 </TableCell>
                 <TableCell>{exp.role}</TableCell>
                 <TableCell>
-                  {format(new Date(exp.startDate), "MMM yyyy")} - {format(new Date(exp.endDate), "MMM yyyy")}
+                  {format(new Date(exp.startDate), "MMM yyyy")} -{" "}
+                  {new Date(exp.endDate) > new Date() ? "Present" : format(new Date(exp.endDate), "MMM yyyy")}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">

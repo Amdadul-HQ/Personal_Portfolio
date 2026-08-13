@@ -120,20 +120,19 @@ const AboutsPage = () => {
           >
             <div className="p-8 rounded-2xl transition-all duration-500">
               <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
-                Passionate{" "}
                 <span className="font-semibold text-green-600">
-                  Full-Stack Developer
+                  Full-stack engineer
                 </span>{" "}
-                with 1+ years of experience building scalable and user-focused
-                web applications. Skilled in the{" "}
-                <span className="font-semibold text-green-400">MERN stack</span>{" "}
-                (MongoDB, Express, React, Node.js),{" "}
-                <span className="font-semibold text-green-400">Next.js</span>,{" "}
-                <span className="font-semibold text-green-400">PostgreSQL</span>
-                , and{" "}
-                <span className="font-semibold text-green-400">MySQL</span>. I
-                focus on writing clean code, crafting intuitive UI/UX, and
-                delivering impactful solutions from concept to deployment.
+                with 3+ years building production systems in{" "}
+                <span className="font-semibold text-green-400">Node.js</span>{" "}
+                and{" "}
+                <span className="font-semibold text-green-400">Next.js</span>.
+                Core engineer on{" "}
+                <span className="font-semibold text-green-400">LeadPylot</span>{" "}
+                at Digital Pylot — a multi-tenant CRM SaaS spanning 14
+                microservices — where I own the PDF form-mapping and generation
+                engine, three-tier RBAC, a two-way IMAP email client, and
+                multi-channel realtime notifications.
               </p>
             </div>
           </ScrollElement>
@@ -145,15 +144,24 @@ const AboutsPage = () => {
           >
             <div className="p-8 rounded-2xl">
               <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
-                As a{" "}
+                Before that, I led{" "}
                 <span className="font-semibold text-green-600">
-                  Freelance Full-Stack Developer
+                  20 developers
+                </span>{" "}
+                as Backend Team Lead at Softvence — delivering 7–8
+                service-based projects under tight deadlines — and contributed
+                to{" "}
+                <span className="font-semibold text-green-400">
+                  20+ client websites
+                </span>{" "}
+                at Monster Studio, from custom CMS builds with YouTube API
+                integration to SEO-optimised UIs with{" "}
+                <span className="font-semibold text-green-400">Remix</span>,{" "}
+                <span className="font-semibold text-green-400">React</span>, and{" "}
+                <span className="font-semibold text-green-400">
+                  Tailwind CSS
                 </span>
-                , I’ve successfully designed and developed over eight websites,
-                turning client ideas into fully functional, user-centric
-                solutions. My freelance projects span e-commerce platforms,
-                CRMs, and portfolio sites, all crafted with performance and
-                scalability in mind.
+                .
               </p>
             </div>
           </ScrollElement>
@@ -165,12 +173,21 @@ const AboutsPage = () => {
           >
             <div className="p-8 rounded-2xl">
               <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
-                With expertise in{" "}
-                <span className="font-semibold text-green-400">React.js</span>,{" "}
-                <span className="font-semibold text-green-400">Node.js</span>,
-                and scalable databases, I’m passionate about creating
-                user-focused applications that not only solve problems but also
-                deliver exceptional user experiences.
+                My depth is in{" "}
+                <span className="font-semibold text-green-400">
+                  document automation
+                </span>
+                ,{" "}
+                <span className="font-semibold text-green-400">
+                  realtime systems
+                </span>
+                , and{" "}
+                <span className="font-semibold text-green-400">
+                  Redis-backed performance work
+                </span>{" "}
+                — and I’m passionate about creating user-focused applications
+                that not only solve problems but also deliver exceptional user
+                experiences.
               </p>
             </div>
           </ScrollElement>
