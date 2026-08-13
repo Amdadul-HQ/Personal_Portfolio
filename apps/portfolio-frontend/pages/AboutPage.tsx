@@ -55,7 +55,7 @@ const AboutsPage = () => {
         description="Welcome to my portfolio website. I'm a Full Stack Developer specializing in modern web technologies."
         path="/about"
       /> */}
-      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden">
+      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden" data-pet-section="about">
         <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 dark:text-white md:text-[200px]">
           Amdadul HQ<span className="text-orange-500">.</span>
         </h2>

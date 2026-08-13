@@ -13,7 +13,7 @@ const ContactPage = () => {
   }, []);
   return (
     <>
-        <section className={twMerge(
+        <section data-pet-section="contact" className={twMerge(
           "sticky top-0 grid min-h-screen w-full place-content-center overflow-hidden bg-[#f5f5f5]",
           "lenis-section"
         )}>

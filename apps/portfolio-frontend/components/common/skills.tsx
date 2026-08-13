@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
-
 interface RawSkill {
   name: string;
   image: string;
@@ -17,28 +16,21 @@ interface Skill {
 }
 
 interface SkillCategory {
-  title: string;
+  field: string;
+  command: string;
   skills: Skill[];
 }
 
 // Display order for skill categories, regardless of DB insertion order.
 const FIELD_ORDER = ['PROGRAMMING_LANGUAGE', 'FRONTEND', 'BACKEND', 'DEVOPS', 'TOOL'];
 
-const mapFieldToTitle = (field: string): string => {
-  switch (field.toUpperCase()) {
-    case 'PROGRAMMING_LANGUAGE':
-      return 'Programming Language :';
-    case 'FRONTEND':
-      return 'Front-End Development :';
-    case 'BACKEND':
-      return 'Back-End Development :';
-    case 'DEVOPS':
-      return 'DevOps :';
-    case 'TOOL':
-      return 'Tools :';
-    default:
-      return field; // fallback
-  }
+// Terminal directory name per category (the "$ ls ./<dir>" line)
+const FIELD_DIRS: Record<string, string> = {
+  PROGRAMMING_LANGUAGE: 'languages',
+  FRONTEND: 'frontend',
+  BACKEND: 'backend',
+  DEVOPS: 'devops',
+  TOOL: 'tools',
 };
 
 const transformSkills = (dbSkills: RawSkill[]): SkillCategory[] => {
@@ -54,130 +46,146 @@ const transformSkills = (dbSkills: RawSkill[]): SkillCategory[] => {
   }
 
   return FIELD_ORDER.filter((field) => grouped[field]?.length).map((field) => ({
-    title: mapFieldToTitle(field),
+    field,
+    command: `ls ./${FIELD_DIRS[field] ?? field.toLowerCase()}`,
     skills: grouped[field] as Skill[],
   }));
 };
 
+const Prompt = () => (
+  <>
+    <span className="text-green-400">~/skills</span>
+    <span className="text-gray-500"> $ </span>
+  </>
+)
+
 export default function Skills() {
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  }
+  const [categories, setCategories] = useState<SkillCategory[]>([]);
 
-  const titleVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  }
+  useEffect(() => {
+    async function fetchSkills() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skills`)
+        const data = await response.json()
+        setCategories(transformSkills(data.data))
+      } catch (error) {
+        console.error("Error fetching skills:", error)
+      }
+    }
+    fetchSkills()
+  }, [])
 
-  const categoryVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  }
-
-  const skillVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.3,
-        ease: "easeOut",
-      },
-    },
-  }
-  const [skills, setSkills] = useState<SkillCategory[]>([]);
-    useEffect(()=>{
-        async function fetchBlog() {
-          try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/skills`)
-  
-            const data = await response.json()
-            const skillsDate = data.data
-            setSkills(transformSkills(skillsDate))
-          } catch (error) {
-            console.error("Error fetching blog:", error)
-          } 
-        }
-        fetchBlog()
-      },[])
-
+  const totalSkills = categories.reduce((n, c) => n + c.skills.length, 0)
 
   return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, margin: "-100px" }}
-      variants={containerVariants}
-      className="w-full min-h-screen bg-[#0F1012] py-20 px-6 md:px-12 lg:px-16 rounded-t-[80px]"
-    >
+    <section className="w-full min-h-screen bg-[#0F1012] py-20 px-4 sm:px-6 md:px-12 lg:px-16 rounded-t-[80px]">
       <div className="max-w-6xl mx-auto">
-        <motion.div variants={titleVariants} className="mb-12">
-          <h2 className="text-4xl font-bold text-white flex items-center gap-2">
-            Skills
-            <span className="bg-green-500 h-8 w-8 flex items-center justify-center rounded-sm">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-black"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </span>
-          </h2>
+        {/* Heading — same style family as the experience section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <h2 className="text-4xl font-bold tracking-wider text-green-600">SKILLS</h2>
+          <p className="mt-3 font-mono text-sm text-green-500/70">
+            <Prompt />
+            cat stack.config.ts
+            <motion.span
+              className="ml-1 inline-block h-4 w-2 translate-y-0.5 bg-green-500"
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+            />
+          </p>
         </motion.div>
 
-        <div className="space-y-12">
-          {skills?.map((category:{title:string,skills:{icon:string,name:string}[]}, index) => (
-            <motion.div key={index} variants={categoryVariants} className="space-y-4">
-              <h3 className="text-xl md:text-2xl font-medium text-white">{category?.title}</h3>
-              <div className="flex flex-wrap gap-3">
-                {category?.skills.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skillIndex}
-                    variants={skillVariants}
-                    whileHover={{ scale: 1.05 }}
-                    className="bg-[#1A1A1A] dark:bg-[#0f1524] rounded-full cursor-pointer px-5 py-2.5 flex items-center gap-2 transition-all duration-300 hover:bg-[#252525] dark:hover:bg-[#151b2e] dark:ring-1 dark:ring-green-500/20"
-                  >
-                    <div className="w-5 h-5 relative">
-                      <Image src={skill.icon || "/placeholder.svg"} alt={skill.name} fill className="object-contain" />
-                    </div>
-                    <span className="text-gray-200 text-sm md:text-base">{skill.name}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {/* One big terminal window */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.05 }}
+          transition={{ duration: 0.55 }}
+          className="overflow-hidden rounded-xl border border-[#30363d] bg-[#0d1117]/95 font-mono shadow-xl backdrop-blur"
+        >
+          {/* Terminal title bar */}
+          <div className="flex items-center gap-3 border-b border-[#30363d] bg-[#161b22] px-4 py-2.5">
+            <span className="flex gap-1.5">
+              <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+              <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+              <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+            </span>
+            <span className="text-xs text-gray-400">skills.sh — ~/skills</span>
+            <span className="ml-auto rounded-full border border-green-500/30 bg-green-500/10 px-3 py-0.5 text-xs text-green-400">
+              {totalSkills} installed
+            </span>
+          </div>
+
+          {/* Terminal body */}
+          <div className="space-y-7 px-4 py-6 sm:px-6">
+            {categories.map((category, catIndex) => (
+              <motion.div
+                key={category.field}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.4, delay: 0.06 * catIndex }}
+              >
+                {/* Command line */}
+                <p className="mb-3 text-sm">
+                  <Prompt />
+                  <span className="text-gray-200">{category.command}</span>
+                </p>
+
+                {/* "Output" — the skill chips */}
+                <div className="flex flex-wrap gap-2.5 pl-2 sm:pl-6">
+                  {category.skills.map((skill, skillIndex) => (
+                    <motion.span
+                      key={skill.name}
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.25, delay: 0.03 * skillIndex }}
+                      whileHover={{ y: -3, scale: 1.04 }}
+                      className="inline-flex cursor-default items-center gap-2 rounded-lg border border-[#30363d] bg-[#161b22] px-3 py-1.5 text-sm text-gray-200 transition-[border-color,box-shadow] duration-200 hover:border-green-500/60 hover:shadow-[0_0_16px_-4px_rgba(34,197,94,0.5)]"
+                    >
+                      <span className="relative h-[18px] w-[18px]">
+                        <Image src={skill.icon || "/placeholder.svg"} alt={skill.name} fill className="object-contain" />
+                      </span>
+                      {skill.name}
+                    </motion.span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+
+            {/* Closing lines */}
+            {categories.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="space-y-1 text-sm"
+              >
+                <p>
+                  <Prompt />
+                  <span className="text-gray-200">npm audit</span>
+                </p>
+                <p className="pl-2 text-green-400 sm:pl-6">found 0 vulnerabilities ✓ — always learning, always shipping</p>
+                <p>
+                  <Prompt />
+                  <motion.span
+                    className="inline-block h-4 w-2 translate-y-0.5 bg-green-500"
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                  />
+                </p>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   )
 }

@@ -37,22 +37,27 @@ const ScrollStack =()=> {
   return (
       <main>
         <article>
-          <section className="h-screen sticky top-0" id="aboutus">
+          <section className="h-screen sticky top-0" id="aboutus" data-pet-section="about-me">
             <AboutMe />
           </section>
-          <section className="h-screen  w-full sticky -top-32 md:top-0 mb-10" id="experience">
+          {/* NOT sticky/h-screen: the experience timeline is taller than one viewport,
+              and a fixed-height sticky wrapper clips everything past the first screen.
+              `relative` keeps it painting above the pinned section before it. */}
+          <section className="relative w-full mb-10" id="experience" data-pet-section="experience">
             <Experience />
           </section>
-          <section className="h-screen sticky top-0" id="skills">
+          {/* NOT sticky/h-screen (same clipping issue as experience): the skills
+              terminal can be taller than one viewport on smaller screens. */}
+          <section className="relative w-full" id="skills" data-pet-section="skills">
             <Skills />
           </section>
-          <section className="h-screen sticky top-0" id="projects">
+          <section className="h-screen sticky top-0" id="projects" data-pet-section="projects">
             <Projects />
           </section>
-          <section className="h-screen sticky top-0" id="blogs">
+          <section className="h-screen sticky top-0" id="blogs" data-pet-section="blogs">
             <PopularBlogs />
           </section>
-          <section className="bg-green-300 rounded-t-[80px]  sticky top-10 md:top-0 dark:bg-green-950" id="links">
+          <section className="bg-green-300 rounded-t-[80px]  sticky top-10 md:top-0 dark:bg-green-950" id="links" data-pet-section="contact">
             <RevealLinks />
           </section>
         </article>

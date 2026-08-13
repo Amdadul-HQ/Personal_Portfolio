@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "@workspace/ui/globals.css"
 import Providers from "@/providers/Providers";
 import { Toaster } from "@workspace/ui/components/sonner";
-import "./fonts.css"; 
+import CursorPet from "@/components/common/cursor-pet";
+import "./fonts.css";
 
 
 export const metadata : Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
         <Providers>
           <Toaster richColors position="bottom-right" />
           {children}
+          <CursorPet />
         </Providers>
       </body>
     </html>

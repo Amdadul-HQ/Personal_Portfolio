@@ -7,7 +7,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden ">
+      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden " data-pet-section="projects">
         <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 dark:text-white md:text-[200px]">
           PROJECTS<span className="text-orange-500">.</span>
         </h2>

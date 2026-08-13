@@ -37,11 +37,11 @@ const BlogsPage = ({blogs}:any) => {
 
     return (
         <>
-         <section className="relative grid min-h-screen w-full place-content-center overflow-hidden ">
-            <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 md:text-[200px]">
+         <section className="relative grid min-h-screen w-full place-content-center overflow-hidden " data-pet-section="blogs">
+            <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 dark:text-white md:text-[200px]">
             BLOGS<span className="text-orange-500">.</span>
             </h2>
-      </section>   
+      </section>
             <motion.div
           className="grid grid-cols-1 md:grid-cols-2 max-w-6xl mx-auto lg:grid-cols-4 gap-2"
           variants={containerVariants}
