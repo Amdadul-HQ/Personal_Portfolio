@@ -11,19 +11,21 @@ import {
 } from "framer-motion"
 
 // ---------------------------------------------------------------------------
-// Site-wide cursor pet — a little green code-bug that chases the mouse
+// Site-wide cursor pet — a little green code-cat that chases the mouse
 // everywhere, and announces each section (elements tagged with
 // data-pet-section="name") as it becomes the current one on screen.
 // ---------------------------------------------------------------------------
 
 const IDLE_QUIPS = [
-  "// hi there!",
+  "// meow there!",
   "debugging…",
   "npm run chase",
-  "</>",
+  "purr(); // 9 lives",
   "0 bugs found ✓",
-  "git push --force?!",
+  "git push --paws?!",
   "while(true) { follow() }",
+  "sudo pet me",
+  "catch (mouse) {}",
 ]
 
 // How long an announcement bubble stays up
@@ -53,7 +55,7 @@ const PROFILE = {
 }
 
 const INTRO_SPEECH =
-  "Hi! I'm Amdadul's code bug. Meet Amdadul Haque Bhuiyan — a full-stack software engineer from Dhaka, Bangladesh, with three plus years in Node and Next J S. He's currently building Lead Pylot at Digital Pylot — and yes, he's available for work!"
+  "Meow! I'm Amdadul's code cat. Meet Amdadul Haque Bhuiyan — a full-stack software engineer from Dhaka, Bangladesh, with three plus years in Node and Next J S. He's currently building Lead Pylot at Digital Pylot — and yes, he's available for work!"
 
 // Ranked wishlist of known-pleasant voices, then any female English voice,
 // then any English voice at all.
@@ -508,24 +510,70 @@ export default function CursorPet() {
             </radialGradient>
           </defs>
 
-          {/* Antenna */}
-          <line x1="23" y1="10" x2="23" y2="4" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" />
-          <motion.circle
-            cx="23"
-            cy="3.5"
-            r="2.5"
-            fill="#4ade80"
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.6, repeat: Infinity }}
+          {/* Tail — tall S-curve that idles with a slow sway, pulsing tip */}
+          <motion.g
+            className="origin-bottom-left [transform-box:fill-box]"
+            animate={{ rotate: [-5, 6, -5] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <path
+              d="M32.5 41 C40 42 44.5 36 42 30 C40.2 25.5 42.5 22 45.5 21.5"
+              stroke="#22c55e"
+              strokeWidth="3.4"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <motion.circle
+              cx="45.5"
+              cy="21.5"
+              r="2"
+              fill="#4ade80"
+              animate={{ opacity: [1, 0.35, 1] }}
+              transition={{ duration: 1.6, repeat: Infinity }}
+            />
+          </motion.g>
+
+          {/* Sitting body */}
+          <path
+            d="M13.2 44 C11.5 34 15.5 27 23 27 C30.5 27 34.5 34 32.8 44 Z"
+            fill="url(#petBody)"
+            stroke="#22c55e"
+            strokeOpacity="0.55"
           />
 
-          {/* Feet */}
-          <circle cx="15" cy="42" r="3" fill="#166534" />
-          <circle cx="31" cy="42" r="3" fill="#166534" />
+          {/* Ears (drawn behind the head so their bases tuck under it) */}
+          <path d="M14.2 13.4 L10.5 1.5 L22 7.6 Z" fill="#22c55e" stroke="#15803d" strokeWidth="0.6" />
+          <path d="M15.8 11.8 L12.6 4.4 L20.4 8.6 Z" fill="#14532d" />
+          <path d="M31.8 13.4 L35.5 1.5 L24 7.6 Z" fill="#22c55e" stroke="#15803d" strokeWidth="0.6" />
+          <path d="M30.2 11.8 L33.4 4.4 L25.6 8.6 Z" fill="#14532d" />
 
-          {/* Body */}
-          <ellipse cx="23" cy="26" rx="16" ry="15" fill="url(#petBody)" />
-          <ellipse cx="23" cy="26" rx="16" ry="15" stroke="#22c55e" strokeOpacity="0.6" />
+          {/* Head + tabby "M" + muzzle patch */}
+          <ellipse cx="23" cy="21" rx="13" ry="11.5" fill="url(#petBody)" stroke="#22c55e" strokeOpacity="0.6" />
+          <path
+            d="M18 12 L19.2 15 M23 10.5 L23 14 M28 12 L26.8 15"
+            stroke="#15803d"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            strokeOpacity="0.75"
+            fill="none"
+          />
+          <ellipse cx="23" cy="27.5" rx="6.2" ry="4" fill="#bbf7d0" fillOpacity="0.35" />
+
+          {/* Whiskers */}
+          <path
+            d="M16.5 25.6 L7.6 23.4 M16.6 27.4 L7.8 29.2"
+            stroke="#bbf7d0"
+            strokeOpacity="0.85"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+          />
+          <path
+            d="M29.5 25.6 L38.4 23.4 M29.4 27.4 L38.2 29.2"
+            stroke="#bbf7d0"
+            strokeOpacity="0.85"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+          />
 
           {/* Eyes (group blinks on a timer) */}
           <motion.g
@@ -533,32 +581,43 @@ export default function CursorPet() {
             animate={{ scaleY: [1, 0.08, 1] }}
             transition={{ duration: 0.22, repeat: Infinity, repeatDelay: 3.4, times: [0, 0.5, 1] }}
           >
-            <circle cx="17" cy="23" r="4.5" fill="#fff" />
-            <circle cx="29" cy="23" r="4.5" fill="#fff" />
-            {/* Pupils glance in the direction of travel */}
-            <motion.circle style={{ x: pupilX }} cx="17" cy="23.5" r="2.2" fill="#0a0a0a" />
-            <motion.circle style={{ x: pupilX }} cx="29" cy="23.5" r="2.2" fill="#0a0a0a" />
+            <ellipse cx="17.5" cy="20" rx="4.8" ry="4.6" fill="#f8fffb" stroke="#14532d" strokeWidth="0.7" />
+            <ellipse cx="28.5" cy="20" rx="4.8" ry="4.6" fill="#f8fffb" stroke="#14532d" strokeWidth="0.7" />
+            {/* Slit pupils glance in the direction of travel */}
+            <motion.ellipse style={{ x: pupilX }} cx="17.5" cy="20" rx="1.3" ry="3.5" fill="#0a0a0a" />
+            <motion.ellipse style={{ x: pupilX }} cx="28.5" cy="20" rx="1.3" ry="3.5" fill="#0a0a0a" />
+            <motion.circle style={{ x: pupilX }} cx="18.6" cy="18.1" r="1.05" fill="#fff" fillOpacity="0.95" />
+            <motion.circle style={{ x: pupilX }} cx="29.6" cy="18.1" r="1.05" fill="#fff" fillOpacity="0.95" />
           </motion.g>
 
-          {/* Smile (talking mouth while the intro voice plays) + coder belly */}
+          {/* Nose */}
+          <path d="M20.9 24.3 L25.1 24.3 L23 26.6 Z" fill="#052e16" />
+
+          {/* Mouth: ω-muzzle at rest, opens while the intro voice plays */}
           {speaking ? (
             <motion.ellipse
               cx="23"
-              cy="31.5"
-              rx="3"
+              cy="29.2"
+              rx="2.6"
               fill="#052e16"
               animate={{ ry: [0.8, 2.4, 0.8] }}
               transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
             />
           ) : (
-            <path d="M19 31 Q23 34 27 31" stroke="#0a0a0a" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+            <path
+              d="M23 26.6 v1.6 M23 28.2 Q20.9 30.6 19.1 28.2 M23 28.2 Q25.1 30.6 26.9 28.2"
+              stroke="#052e16"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              fill="none"
+            />
           )}
 
-          {/* Sound waves while speaking */}
+          {/* Sound waves while speaking (left side — the tail owns the right) */}
           {speaking && (
             <g>
               <motion.path
-                d="M41 21 q3.5 5 0 10"
+                d="M5.5 22 q-3.5 5 0 10"
                 stroke="#4ade80"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -567,7 +626,7 @@ export default function CursorPet() {
                 transition={{ duration: 0.8, repeat: Infinity }}
               />
               <motion.path
-                d="M44.5 19 q5 7 0 14"
+                d="M2 20 q-5 7 0 14"
                 stroke="#4ade80"
                 strokeWidth="1.3"
                 strokeLinecap="round"
@@ -577,47 +636,54 @@ export default function CursorPet() {
               />
             </g>
           )}
-          <text x="23" y="39" textAnchor="middle" fontSize="5.5" fontFamily="monospace" fill="#052e16" fontWeight="bold">
+
+          {/* Collar + bell, paws, and the coder marking on the chest */}
+          <path d="M15.4 30.9 Q23 35.6 30.6 30.9" stroke="#052e16" strokeWidth="2" strokeLinecap="round" fill="none" />
+          <circle cx="23" cy="35" r="1.6" fill="#4ade80" />
+          <ellipse cx="17.5" cy="43.4" rx="3.4" ry="2.5" fill="#166534" />
+          <ellipse cx="28.5" cy="43.4" rx="3.4" ry="2.5" fill="#166534" />
+          <text x="23" y="41.4" textAnchor="middle" fontSize="5.2" fontFamily="monospace" fill="#bbf7d0" fontWeight="bold">
             {"</>"}
           </text>
 
           {/* --- Section outfits ------------------------------------------- */}
           {variant === "glasses" && (
             <g>
-              <circle cx="17" cy="23" r="6" fill="none" stroke="#e5e7eb" strokeWidth="1.4" />
-              <circle cx="29" cy="23" r="6" fill="none" stroke="#e5e7eb" strokeWidth="1.4" />
-              <line x1="23" y1="23" x2="23" y2="23" stroke="#e5e7eb" strokeWidth="1.4" />
-              <path d="M11 22 L8 20 M35 22 L38 20" stroke="#e5e7eb" strokeWidth="1.4" strokeLinecap="round" />
-              <path d="M22 23 h2" stroke="#e5e7eb" strokeWidth="1.4" />
+              <circle cx="17.5" cy="20" r="5.4" fill="none" stroke="#e5e7eb" strokeWidth="1.4" />
+              <circle cx="28.5" cy="20" r="5.4" fill="none" stroke="#e5e7eb" strokeWidth="1.4" />
+              <path d="M12.1 19.4 L8.6 17.4 M33.9 19.4 L37.4 17.4" stroke="#e5e7eb" strokeWidth="1.4" strokeLinecap="round" />
+              <path d="M22.7 20 h0.6" stroke="#e5e7eb" strokeWidth="1.4" />
             </g>
           )}
           {variant === "hardhat" && (
             <g>
-              <path d="M12 15 Q23 3 34 15 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="0.8" />
-              <rect x="9" y="14" width="28" height="3" rx="1.5" fill="#f59e0b" />
-              <rect x="21" y="6" width="4" height="6" rx="1" fill="#fde68a" />
+              <path d="M15.5 12 Q23 2.4 30.5 12 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="0.8" />
+              <rect x="13" y="11" width="20" height="3.2" rx="1.6" fill="#f59e0b" />
+              <rect x="21" y="5" width="4" height="6.2" rx="1" fill="#fde68a" />
             </g>
           )}
           {variant === "gradcap" && (
             <g>
-              <polygon points="23,3 36,9 23,15 10,9" fill="#1f2937" stroke="#4b5563" strokeWidth="0.8" />
-              <rect x="18" y="11" width="10" height="3.5" rx="1" fill="#111827" />
-              <path d="M23 9 L33 13 L33 18" stroke="#facc15" strokeWidth="1.2" fill="none" />
-              <circle cx="33" cy="19" r="1.6" fill="#facc15" />
+              <polygon points="23,5.5 33,10 23,14.5 13,10" fill="#1f2937" stroke="#4b5563" strokeWidth="0.8" />
+              <rect x="19" y="12" width="8" height="3" rx="1" fill="#111827" />
+              <path d="M23 10 L32 13.5 L32.5 18" stroke="#facc15" strokeWidth="1.2" fill="none" />
+              <circle cx="32.5" cy="19" r="1.5" fill="#facc15" />
             </g>
           )}
+          {/* Emoji props need an explicit fill — the root <svg fill="none"> would
+              otherwise be inherited and the glyph renders invisible. */}
           {variant === "tool" && (
-            <text x="40" y="33" textAnchor="middle" fontSize="11" transform="rotate(15 40 33)">
+            <text x="7.5" y="45" textAnchor="middle" fontSize="10.5" fill="#fff" transform="rotate(-15 7.5 45)">
               🛠️
             </text>
           )}
           {variant === "pencil" && (
-            <text x="40" y="33" textAnchor="middle" fontSize="11" transform="rotate(20 40 33)">
+            <text x="7.5" y="45" textAnchor="middle" fontSize="10.5" fill="#fff" transform="rotate(-20 7.5 45)">
               ✏️
             </text>
           )}
           {variant === "mail" && (
-            <text x="40" y="33" textAnchor="middle" fontSize="11" transform="rotate(-10 40 33)">
+            <text x="7.5" y="45" textAnchor="middle" fontSize="10.5" fill="#fff" transform="rotate(10 7.5 45)">
               📬
             </text>
           )}
