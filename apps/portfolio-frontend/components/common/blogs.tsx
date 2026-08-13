@@ -86,7 +86,7 @@ export function PopularBlogs() {
 
 
   return (
-    <section className="w-full min-h-screen bg-[#EFEFEF] flex py-24 justify-center rounded-tr-[40px] md:rounded-tr-[80px] rounded-tl-[40px] md:rounded-tl-[80px] px-4">
+    <section className="w-full min-h-screen bg-[#EFEFEF] dark:bg-[#0f1524] flex py-24 justify-center rounded-tr-[40px] md:rounded-tr-[80px] rounded-tl-[40px] md:rounded-tl-[80px] px-4">
       <div className="container max-w-6xl mx-auto">
         <motion.div
           className="mb-12 flex items-center justify-between"
@@ -97,7 +97,7 @@ export function PopularBlogs() {
           <div>
             <h2 className="text-3xl font-bold mb-2">Most Popular</h2>
           <motion.p
-            className="mt-4 text-gray-600 max-w-2xl"
+            className="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -130,7 +130,7 @@ export function PopularBlogs() {
                 y: -10,
                 transition: { duration: 0.3 },
               }}
-              className="bg-white rounded-lg overflow-hidden shadow-md"
+              className="bg-white dark:bg-[#151b2e] rounded-lg overflow-hidden shadow-md dark:shadow-[0_8px_30px_-15px_rgba(34,197,94,0.35)]"
             >
               <motion.div
                 className="relative h-48 w-full overflow-hidden"
@@ -141,11 +141,11 @@ export function PopularBlogs() {
               </motion.div>
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-2 line-clamp-2">{blog.title}</h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">{blog.shortDescription}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{blog.shortDescription}</p>
                 <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                   <Link
                     href={`/blogs/${blog.id}`}
-                    className="inline-flex items-center text-green-500 font-medium hover:text-green-600 transition-colors"
+                    className="inline-flex items-center text-green-500 font-medium hover:text-green-600 dark:hover:text-green-400 transition-colors"
                   >
                     Read More
                     <motion.span

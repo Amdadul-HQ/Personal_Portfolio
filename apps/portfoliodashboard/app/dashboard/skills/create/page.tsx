@@ -150,6 +150,7 @@ export default function CreateSkillPage() {
                   <SelectValue placeholder="Select field" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="PROGRAMMING_LANGUAGE">Programming Language</SelectItem>
                   <SelectItem value="FRONTEND">Frontend</SelectItem>
                   <SelectItem value="BACKEND">Backend</SelectItem>
                   <SelectItem value="DEVOPS">DevOps</SelectItem>

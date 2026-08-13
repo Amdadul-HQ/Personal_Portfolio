@@ -81,7 +81,7 @@ export default function AiChat() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 flex h-[70vh] max-h-[560px] w-[92vw] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-green-500/20 bg-white shadow-2xl dark:bg-[#0f1524]">
+        <div className="fixed bottom-24 right-5 z-50 flex h-[70vh] max-h-[560px] w-[92vw] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-green-500/20 bg-white shadow-2xl dark:bg-[#0f1524] dark:shadow-[0_8px_30px_-15px_rgba(34,197,94,0.35)]">
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-green-500/15 bg-green-500/10 px-4 py-3">
             <span className="flex size-9 items-center justify-center rounded-full bg-green-500 text-white">
@@ -94,7 +94,7 @@ export default function AiChat() {
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+          <div ref={scrollRef} data-lenis-prevent className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             <Bubble role="assistant">{greeting}</Bubble>
             {messages.map((m, i) => (
               <Bubble key={i} role={m.role}>

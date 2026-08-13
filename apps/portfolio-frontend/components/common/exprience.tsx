@@ -108,7 +108,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="bg-gray-900/40 rounded-xl p-6 border border-gray-800 hover:border-green-600/50 transition-all duration-300"
+        className="bg-gray-900/40 dark:bg-[#0f1524] rounded-xl p-6 border border-gray-800 dark:border-green-500/20 hover:border-green-600/50 dark:hover:border-green-600/50 transition-all duration-300"
       >
         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
           <div>
@@ -116,7 +116,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
             <p className="text-white/50">{experience.company}</p>
           </div>
           <div className="md:ml-auto">
-            <span className="text-sm text-white/50 bg-gray-800 px-3 py-1 rounded-full">{formatDateRange(experience?.startDate,experience?.endDate)}</span>
+            <span className="text-sm text-white/50 bg-gray-800 dark:bg-[#151b2e] px-3 py-1 rounded-full">{formatDateRange(experience?.startDate,experience?.endDate)}</span>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ function TimelineItem({ experience, index, isLast }: TimelineItemProps): React.R
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 + techIndex * 0.1 }}
-              className="inline-flex text-[#000] items-center px-4 py-1.5 rounded-full text-sm font-bold bg-green-300 hover:bg-gray-300 cursor-pointer transition-colors duration-300"
+              className="inline-flex text-[#000] dark:text-green-300 items-center px-4 py-1.5 rounded-full text-sm font-bold bg-green-300 dark:bg-green-500/20 hover:bg-gray-300 dark:hover:bg-green-500/30 cursor-pointer transition-colors duration-300"
             >
               {tech}
             </motion.span>

@@ -7,7 +7,7 @@ import { ShimmerButton } from '@/components/ui/shimmer-button'
 import HeroTechBeams from '@/components/common/heroTechBeams'
 import { AnimatedBeam } from '@/components/magicui/animated-beam'
 import Link from 'next/link'
-import { createRef, useRef } from 'react'
+import { createRef, useEffect, useRef, useState } from 'react'
 import { FaLaptopCode, FaServer, FaDatabase, FaCloud, FaFigma } from 'react-icons/fa'
 
 const expertise = [
@@ -28,6 +28,21 @@ const Hero = () => {
   const beamContainerRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
   const badgeRefs = useRef(expertise.map(() => createRef<HTMLDivElement>()))
+
+  // Resume link — set from the admin dashboard's Site Settings page
+  const [resumeLink, setResumeLink] = useState('')
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/settings`)
+        const data = await response.json()
+        setResumeLink(data?.data?.resumeLink || '')
+      } catch (error) {
+        console.error('Error fetching site settings:', error)
+      }
+    }
+    fetchSettings()
+  }, [])
 
   return (
     <div className="relative min-h-screen justify-center flex flex-col items-center">
@@ -53,7 +68,7 @@ const Hero = () => {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 }}
-                      className="w-fit mx-auto px-4 py-1.5 rounded-full bg-green-300/50 text-primary text-sm font-medium"
+                      className="w-fit mx-auto px-4 py-1.5 rounded-full bg-green-300/50 text-primary text-sm font-medium dark:bg-green-500/20 dark:text-green-300"
                     >
                       🎉 | Available for work
                     </motion.div>
@@ -69,7 +84,7 @@ const Hero = () => {
                         <div
                           key={item.label}
                           ref={badgeRefs.current[i]}
-                          className="inline-flex items-center gap-2 rounded-full border border-green-500/40 bg-green-500/5 px-4 py-2 text-sm font-medium text-primary shadow-sm backdrop-blur-sm transition-colors hover:border-green-500/70 hover:bg-green-500/10"
+                          className="inline-flex items-center gap-2 rounded-full border border-green-500/40 bg-green-500/5 px-4 py-2 text-sm font-medium text-primary shadow-sm backdrop-blur-sm transition-colors hover:border-green-500/70 hover:bg-green-500/10 dark:shadow-none"
                         >
                           <item.Icon className="text-green-500" />
                           {item.label}
@@ -90,15 +105,15 @@ const Hero = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.4 }}
-                      className="text-2xl sm:text-3xl lg:text-4xl text-black font-medium"
+                      className="text-2xl sm:text-3xl lg:text-4xl text-black dark:text-white font-medium"
                     >
                       I build{' '}
                       <FlipWords
                         duration={3000}
-                        className="bg-gradient-to-r from-green-500 to-green-400 text-white px-4 py-2 rounded-xl shadow-lg"
+                        className="bg-gradient-to-r from-green-500 to-green-400 text-white px-4 py-2 rounded-xl shadow-lg dark:shadow-[0_8px_30px_-15px_rgba(34,197,94,0.35)]"
                         words={words}
                       />{' '}
-                      <span className="block sm:inline text-black">websites</span>
+                      <span className="block sm:inline text-black dark:text-white">websites</span>
                     </motion.div>
 
                     {/* Role line */}
@@ -135,13 +150,15 @@ const Hero = () => {
             </motion.div>
           </div>
           <div className='flex items-center gap-x-3 mt-6 justify-center'>
-          <Link href="https://drive.google.com/file/d/11s-a26rikQlVfEZs64oLOAEmC2yyxdc6/view?usp=sharing" target='_blnk'>
-          <ShimmerButton>
-            <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
-            Resume
-            </span>
-          </ShimmerButton>
-          </Link>
+          {resumeLink ? (
+            <Link href={resumeLink} target='_blank' rel='noopener noreferrer'>
+              <ShimmerButton>
+                <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
+                Resume
+                </span>
+              </ShimmerButton>
+            </Link>
+          ) : null}
           <Link href='/contact'>
           <InteractiveHoverButton>Hire Me</InteractiveHoverButton>
           </Link>

@@ -55,8 +55,8 @@ const AboutsPage = () => {
         description="Welcome to my portfolio website. I'm a Full Stack Developer specializing in modern web technologies."
         path="/about"
       /> */}
-      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden bg-[#fff]]">
-        <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 md:text-[200px]">
+      <section className="relative grid min-h-screen w-full place-content-center overflow-hidden">
+        <h2 className="relative z-0 text-[14vw] font-black text-neutral-800 dark:text-white md:text-[200px]">
           Amdadul HQ<span className="text-orange-500">.</span>
         </h2>
       </section>
@@ -67,7 +67,7 @@ const AboutsPage = () => {
             viewport={{ amount: 0.3, margin: "0px 0px 0px 0px" }}
             className="flex flex-col items-start"
           >
-            <div className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900 p-8">
+            <div className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900 dark:text-white p-8">
               I&apos;m Amdadul HQ,{" "}
               <FlipWords
                 className="bg-gradient-to-r from-green-600 to-green-400 text-white px-4 py-2 rounded-xl shadow-lg"
@@ -85,7 +85,7 @@ const AboutsPage = () => {
             viewport={{ amount: 0.3, margin: '0px 0px 0px 0px' }}
           >
             <div className="p-8 rounded-2xl transition-all duration-500 ">
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
                 As a <span className="font-semibold text-green-600">Full Stack Developer</span> at Sinss Digital Marketing Studio since Dec 2023, I've built e-commerce platforms, CRMs, and project management tools using the MERN stack, Next.js, PostgreSQL, and MySQL. I've also independently designed and developed over eight websites, turning ideas into impactful solutions.
               </p>
             </div>
@@ -97,7 +97,7 @@ const AboutsPage = () => {
             className="group"
           >
             <div className="p-8 rounded-2xl ">
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
                 Previously, during my <span className="font-semibold text-green-600">React Developer Internship</span> at Nectarglob Technologies (Dec 2023–Mar 2024), I contributed to a SharePoint-based CRM application, gaining valuable experience in enterprise workflows.
               </p>
             </div>
@@ -119,7 +119,7 @@ const AboutsPage = () => {
             viewport={{ amount: 0.3, margin: "0px 0px 0px 0px" }}
           >
             <div className="p-8 rounded-2xl transition-all duration-500">
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
                 Passionate{" "}
                 <span className="font-semibold text-green-600">
                   Full-Stack Developer
@@ -144,7 +144,7 @@ const AboutsPage = () => {
             className="group"
           >
             <div className="p-8 rounded-2xl">
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
                 As a{" "}
                 <span className="font-semibold text-green-600">
                   Freelance Full-Stack Developer
@@ -164,7 +164,7 @@ const AboutsPage = () => {
             className="group"
           >
             <div className="p-8 rounded-2xl">
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-800 dark:text-gray-300">
                 With expertise in{" "}
                 <span className="font-semibold text-green-400">React.js</span>,{" "}
                 <span className="font-semibold text-green-400">Node.js</span>,

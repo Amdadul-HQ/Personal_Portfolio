@@ -1,8 +1,8 @@
 'use client'
-import LocomotiveScroll from 'locomotive-scroll';
 import { Asterisk, Menu, Github } from 'lucide-react'
 import Link from "next/link"
 import { Button } from "@workspace/ui/components/button"
+import { ThemeToggle } from "./ThemeToggle"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@workspace/ui/components/sheet"
 import { useEffect, useState } from 'react';
 
@@ -19,15 +19,7 @@ const Navbar =() => {
   const [isDeepScrolled, setIsDeepScrolled] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
-  // useEffect(() => {
-  //   const scroll = new LocomotiveScroll({
-  //     el: document.querySelector("[data-scroll-container]"),
-  //     smooth: true,
-  //   });
-
-  //   return () => scroll.destroy(); 
-  // }, []);
-  // const [activeSection, setActiveSection] = useState('');
+  // Smooth scrolling is handled globally by LocomotiveScrollProvider (v5/Lenis).
 
   const playClickSound = () => {
     const audio = new Audio('/src/assets/sfx/click.wav')
@@ -85,11 +77,12 @@ const Navbar =() => {
             </div>
           </div>
           <div className="flex items-center">
+            <ThemeToggle />
             <Link target="_blank" href={"https://github.com/Amdadul-HQ"}>
               <Button
                 variant="ghost"
                 size="icon"
-                className={`mr-2 bg-green-400 cursor-pointer`}
+                className={`mx-2 bg-green-400 cursor-pointer dark:text-black`}
               >
                 <Github className="h-5 w-5" />
               </Button>
@@ -101,8 +94,8 @@ const Navbar =() => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-[300px] bg-green-300 backdrop-blur-lg">
-                <SheetHeader className="border-b border-green-900 pb-4">
+              <SheetContent side="right" className="w-full sm:w-[300px] bg-green-300 backdrop-blur-lg dark:bg-[#0f1524]">
+                <SheetHeader className="border-b border-green-900 pb-4 dark:border-green-500/20">
                   <SheetTitle className="text-left">Navigation</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col space-y-4 mt-8">
@@ -115,8 +108,8 @@ const Navbar =() => {
                         playClickSound()
                       }}
                     >
-                      <div className="flex items-center space-x-4 px-2 py-2 hover:bg-white active:bg-white rounded-md transition-colors border-b border-slate-900">
-                        <span className="text-sm text-gray-800">{item.id}</span>
+                      <div className="flex items-center space-x-4 px-2 py-2 hover:bg-white active:bg-white rounded-md transition-colors border-b border-slate-900 dark:hover:bg-[#151b2e] dark:active:bg-[#151b2e] dark:border-green-500/20">
+                        <span className="text-sm text-gray-800 dark:text-gray-400">{item.id}</span>
                         <span className="text-base font-bold">{item.name}</span>
                       </div>
                     </Link>

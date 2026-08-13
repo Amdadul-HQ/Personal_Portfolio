@@ -111,14 +111,14 @@ const ProjectDetails = () => {
         description={project.name}
         path={`/projects/${project.slug}`}
       /> */}
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 dark:bg-[#0a0a0a]">
       <div className="relative overflow-hidden rounded-b-[80px]">
-        <section className="relative grid h-[70vh] w-full place-content-center overflow-hidden bg-[#fff]">
+        <section className="relative grid h-[70vh] w-full place-content-center overflow-hidden bg-[#fff] dark:bg-[#0f1524]">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative text-center z-0 text-[10vw] font-black text-neutral-800 md:text-[60px]"
+            className="relative text-center z-0 text-[10vw] font-black text-neutral-800 dark:text-white md:text-[60px]"
           >
             {project?.name}<span className="text-orange-500">.</span>
           </motion.h2>
@@ -142,7 +142,7 @@ const ProjectDetails = () => {
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <h3 className="text-2xl font-bold text-orange-500">{stat.value}</h3>
-              <p className="text-gray-600">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
             </div>
           ))}
         </motion.div>
@@ -170,7 +170,7 @@ const ProjectDetails = () => {
                   <h4 className="font-semibold">TECHNOLOGY</h4>
                   <ul className='flex flex-wrap gap-2'>
                     {project?.techonology.map((tech, index) => (
-                      <li className='bg-green-200 p-1 rounded-lg px-2 ' key={index}>{tech}</li>
+                      <li className='bg-green-200 dark:bg-green-500/20 dark:text-green-300 p-1 rounded-lg px-2 ' key={index}>{tech}</li>
                     ))}
                   </ul>
                 </div>
@@ -196,14 +196,14 @@ const ProjectDetails = () => {
           >
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-4">Project Description</h2>
-              <p className="text-gray-700 leading-relaxed">{project?.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{project?.description}</p>
             </div>
 
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-4">Features</h2>
               <ul className="list-disc list-inside space-y-2">
                 {project?.features.map((feature, index) => (
-                  <li key={index} className="text-gray-700">{feature}</li>
+                  <li key={index} className="text-gray-700 dark:text-gray-300">{feature}</li>
                 ))}
               </ul>
             </div>
@@ -242,7 +242,7 @@ const ProjectDetails = () => {
             alt={project?.name || 'Project Mockup'}
             width={1200}
             height={800}
-            className="w-full h-auto rounded-lg shadow-2xl"
+            className="w-full h-auto rounded-lg shadow-2xl dark:shadow-[0_8px_30px_-15px_rgba(34,197,94,0.35)]"
           />
         </motion.div>
       </div>

@@ -42,15 +42,15 @@ export default function BlogDetails() {
 
   return (
     <>
-    <div className="relative bg-gradient-to-b from-orange-50 to-white min-h-screen">
+    <div className="relative bg-gradient-to-b from-orange-50 to-white dark:from-[#0f1524] dark:to-[#0a0a0a] min-h-screen">
       <motion.section
         style={{ opacity, scale }}
         className="relative grid min-h-[50vh] md:min-h-screen w-full place-content-center overflow-hidden px-4 py-12 md:py-0"
       >
-        <h2 className="relative text-center max-w-4xl mx-auto z-0 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-800">
+        <h2 className="relative text-center max-w-4xl mx-auto z-0 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-800 dark:text-white">
           {blog?.title}<span className="text-orange-500">.</span>
         </h2>
-        <p className="mt-4 text-center text-lg sm:text-xl md:text-2xl text-neutral-600 max-w-2xl mx-auto">
+        <p className="mt-4 text-center text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-gray-400 max-w-2xl mx-auto">
           {blog?.shortDescription}
         </p>
       </motion.section>
@@ -65,7 +65,7 @@ export default function BlogDetails() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <div className="rounded-2xl p-6 md:p-8 ">
-            <p className="text-lg md:text-xl leading-relaxed text-neutral-700">{blog.description}</p>
+            <p className="text-lg md:text-xl leading-relaxed text-neutral-700 dark:text-gray-300">{blog.description}</p>
           </div>
         </motion.div>
 
@@ -79,19 +79,19 @@ export default function BlogDetails() {
             <div className="grid grid-cols-2 gap-6 md:gap-8">
               <div>
                 <p className="mb-2 text-orange-400 font-medium">TOPIC NAME</p>
-                <p className="font-medium text-neutral-800">{blog.topic}</p>
+                <p className="font-medium text-neutral-800 dark:text-gray-200">{blog.topic}</p>
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">READING TIME</p>
-                <p className="font-medium text-neutral-800">{blog.readingTime}</p>
+                <p className="font-medium text-neutral-800 dark:text-gray-200">{blog.readingTime}</p>
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">PUBLISH DATE</p>
-                <p className="font-medium text-neutral-800">{new Date(blog.publishDate).toLocaleDateString()}</p>
+                <p className="font-medium text-neutral-800 dark:text-gray-200">{new Date(blog.publishDate).toLocaleDateString()}</p>
               </div>
               <div>
                 <p className="mb-2 text-orange-400 font-medium">CATEGORIES</p>
-                <p className="font-medium text-neutral-800">{blog.category}</p>
+                <p className="font-medium text-neutral-800 dark:text-gray-200">{blog.category}</p>
               </div>
             </div>
 

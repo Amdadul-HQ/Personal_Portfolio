@@ -21,13 +21,20 @@ interface SkillCategory {
   skills: Skill[];
 }
 
+// Display order for skill categories, regardless of DB insertion order.
+const FIELD_ORDER = ['PROGRAMMING_LANGUAGE', 'FRONTEND', 'BACKEND', 'DEVOPS', 'TOOL'];
+
 const mapFieldToTitle = (field: string): string => {
   switch (field.toUpperCase()) {
+    case 'PROGRAMMING_LANGUAGE':
+      return 'Programming Language :';
     case 'FRONTEND':
       return 'Front-End Development :';
     case 'BACKEND':
       return 'Back-End Development :';
-    case 'TOOLS':
+    case 'DEVOPS':
+      return 'DevOps :';
+    case 'TOOL':
       return 'Tools :';
     default:
       return field; // fallback
@@ -39,16 +46,16 @@ const transformSkills = (dbSkills: RawSkill[]): SkillCategory[] => {
   const grouped: Record<string, Skill[]> = {};
 
   for (const skill of dbSkills) {
-    const title = mapFieldToTitle(skill.field);
-    if (!grouped[title]) {
-      grouped[title] = [];
+    const field = skill.field.toUpperCase();
+    if (!grouped[field]) {
+      grouped[field] = [];
     }
-    grouped[title].push({ name: skill.name, icon: skill.image });
+    grouped[field].push({ name: skill.name, icon: skill.image });
   }
 
-  return Object.entries(grouped).map(([title, skills]) => ({
-    title,
-    skills,
+  return FIELD_ORDER.filter((field) => grouped[field]?.length).map((field) => ({
+    title: mapFieldToTitle(field),
+    skills: grouped[field] as Skill[],
   }));
 };
 
@@ -158,7 +165,7 @@ export default function Skills() {
                     key={skillIndex}
                     variants={skillVariants}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-[#1A1A1A] rounded-full cursor-pointer px-5 py-2.5 flex items-center gap-2 transition-all duration-300 hover:bg-[#252525]"
+                    className="bg-[#1A1A1A] dark:bg-[#0f1524] rounded-full cursor-pointer px-5 py-2.5 flex items-center gap-2 transition-all duration-300 hover:bg-[#252525] dark:hover:bg-[#151b2e] dark:ring-1 dark:ring-green-500/20"
                   >
                     <div className="w-5 h-5 relative">
                       <Image src={skill.icon || "/placeholder.svg"} alt={skill.name} fill className="object-contain" />

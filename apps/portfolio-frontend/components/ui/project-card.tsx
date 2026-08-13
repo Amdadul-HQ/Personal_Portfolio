@@ -39,7 +39,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <Card className="overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-lg">
+    <Card className="overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-lg dark:bg-[#0f1524] dark:border-green-500/20 dark:hover:shadow-[0_8px_30px_-15px_rgba(34,197,94,0.35)]">
       <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={project.siteMockup || "/placeholder.svg"}
@@ -52,7 +52,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <CardContent className="flex-grow p-6">
         <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-        <p className="text-gray-600 mb-4">{project.description}</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {project.techonology.map((tech) => (

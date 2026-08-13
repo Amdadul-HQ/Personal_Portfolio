@@ -2,7 +2,7 @@ import '../style.css';
 const loading = () => {
     return (
         <div className='h-screen flex justify-center items-center'>
-            <div className="loader">
+            <div className="loader dark:invert">
   <span className="l">
     <svg
       xmlns="http://www.w3.org/2000/svg"

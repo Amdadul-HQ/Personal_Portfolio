@@ -29,6 +29,8 @@ export function SkillsTable({ skills }: SkillsTableProps) {
 
   const getFieldColor = (field: string) => {
     switch (field) {
+      case "PROGRAMMING_LANGUAGE":
+        return "bg-yellow-100 text-yellow-700"
       case "FRONTEND":
         return "bg-blue-100 text-blue-700"
       case "BACKEND":

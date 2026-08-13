@@ -52,7 +52,7 @@ const ScrollStack =()=> {
           <section className="h-screen sticky top-0" id="blogs">
             <PopularBlogs />
           </section>
-          <section className="bg-green-300 rounded-t-[80px]  sticky top-10 md:top-0" id="links">
+          <section className="bg-green-300 rounded-t-[80px]  sticky top-10 md:top-0 dark:bg-green-950" id="links">
             <RevealLinks />
           </section>
         </article>

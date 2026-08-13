@@ -22,8 +22,8 @@ export default function Error({
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-red-100 p-3 rounded-full">
-              <AlertTriangle className="h-8 w-8 text-red-600" />
+            <div className="bg-red-100 p-3 rounded-full dark:bg-red-500/20">
+              <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
             </div>
           </div>
           <CardTitle className="text-xl sm:text-2xl">Something went wrong</CardTitle>
@@ -32,7 +32,7 @@ export default function Error({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 overflow-auto max-h-32">
+          <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700 overflow-auto max-h-32 dark:bg-[#151b2e] dark:text-gray-300">
             {error.message || "An unexpected error occurred"}
           </div>
         </CardContent>

@@ -59,7 +59,7 @@ export default function ContactForm() {
       </div>
 
       {isSuccess ? (
-        <div className="bg-green-900/20 p-6 rounded-lg text-center">
+        <div className="bg-green-900/20 dark:bg-green-500/10 dark:border dark:border-green-500/20 p-6 rounded-lg text-center">
           <p className="text-green-400 text-lg">Thank you for your message! We'll get back to you soon.</p>
           <Button
             variant="outline"
@@ -82,7 +82,7 @@ export default function ContactForm() {
                       <Input
                         placeholder="Email address"
                         {...field}
-                        className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500"
+                        className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500 dark:bg-[#0f1524] dark:border-green-500/20 dark:placeholder:text-gray-400 dark:focus:border-green-500/40"
                       />
                     </FormControl>
                     <FormMessage className="text-red-400" />
@@ -99,7 +99,7 @@ export default function ContactForm() {
                       <Input
                         placeholder="Phone Number"
                         {...field}
-                        className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500"
+                        className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500 dark:bg-[#0f1524] dark:border-green-500/20 dark:placeholder:text-gray-400 dark:focus:border-green-500/40"
                       />
                     </FormControl>
                     <FormMessage className="text-red-400" />
@@ -117,7 +117,7 @@ export default function ContactForm() {
                     <Textarea
                       placeholder="Message"
                       {...field}
-                      className="border-gray-700 text-white min-h-[160px] rounded-md focus:border-gray-500"
+                      className="border-gray-700 text-white min-h-[160px] rounded-md focus:border-gray-500 dark:bg-[#0f1524] dark:border-green-500/20 dark:placeholder:text-gray-400 dark:focus:border-green-500/40"
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />

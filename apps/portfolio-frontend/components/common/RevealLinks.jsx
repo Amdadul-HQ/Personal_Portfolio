@@ -3,14 +3,14 @@ import { motion } from "framer-motion";
 
 export const RevealLinks = () => {
   return (
-    <section className="grid  w-full gap-2 bg-green-300 px-8 py-24 text-black rounded-t-[80px]">
+    <section className="grid  w-full gap-2 bg-green-300 px-8 py-24 text-black rounded-t-[80px] dark:bg-green-950 dark:text-green-100">
       <div className="flex flex-col md:flex-row gap-y-4 justify-between container gap-x-3 mx-auto">
         <div className="flex flex-col">
           <p className="text-4xl font-semibold mb-3">
           Amdadul-HQ
           </p>
         <div>
-          <p className="mx-auto text-black">
+          <p className="mx-auto text-black dark:text-green-100/80">
           Let's build something amazing together.<br/> I'm available for freelance projects, collaborations, and full-time
           opportunities.<br/> Drop me a message, and let's discuss how we can turn your ideas into reality.
         </p>
@@ -26,7 +26,7 @@ export const RevealLinks = () => {
       </div>
       </div>
         <div>
-          <div className="text-sm text-black mt-3 text-center">Copyright © 2025 - All rights reserved by Amdadul_HQ</div>
+          <div className="text-sm text-black mt-3 text-center dark:text-green-200/70">Copyright © 2025 - All rights reserved by Amdadul_HQ</div>
         </div>
     </section>
   );

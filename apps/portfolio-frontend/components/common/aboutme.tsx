@@ -8,7 +8,7 @@ import Image from "next/image"
 
 export default function AboutMe() {
      return (
-          <section className="w-full min-h-screen bg-[#EFEFEF] flex items-center justify-center rounded-tl-[40px] md:rounded-tl-[80px] px-4">
+          <section className="w-full min-h-screen bg-[#EFEFEF] dark:bg-[#0f1524] flex items-center justify-center rounded-tl-[40px] md:rounded-tl-[80px] px-4">
                <div className="max-w-6xl mx-auto w-full  flex flex-col-reverse items-center justify-between md:flex-row gap-12 mt-4">
                     <div className="w-full md:w-1/2">
                          <div className="relative w-full aspect-square rounded-2xl overflow-hidden">

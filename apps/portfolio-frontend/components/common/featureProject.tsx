@@ -108,7 +108,7 @@ useEffect(() => {
      }, [])
 
      return (
-          <div className="w-full min-h-screen bg-[#161719] text-white px-4 py-24 rounded-tr-[80px]">
+          <div className="w-full min-h-screen bg-[#161719] dark:bg-[#0f1524] text-white px-4 py-24 rounded-tr-[80px]">
                <div className="max-w-6xl mx-auto flex flex-col items-center justify-center">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
@@ -149,7 +149,7 @@ useEffect(() => {
                                         <span className="text-sm text-gray-500">0{index + 1}</span>
                                         <h3 className="text-sm font-medium">{image.name}</h3>
                                    </div>
-                                   <div className="flex items-center justify-between w-full border-b pb-4 group-hover:border-green-500 transition-colors duration-300">
+                                   <div className="flex items-center justify-between w-full border-b dark:border-green-500/20 pb-4 group-hover:border-green-500 dark:group-hover:border-green-500 transition-colors duration-300">
                                         <h2 className="text-xl md:text-3xl lg:text-3xl font-light group-hover:text-green-500 transition-colors duration-300">
                                              {image.description}
                                         </h2>

@@ -1,8 +1,8 @@
 "use client"
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
-import LocomotiveScroll from "locomotive-scroll"
-import "locomotive-scroll/dist/locomotive-scroll.css"
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import type LocomotiveScroll from "locomotive-scroll"
+import "locomotive-scroll/locomotive-scroll.css"
 
 interface LocomotiveScrollContextType {
   scroll: LocomotiveScroll | null
@@ -16,57 +16,47 @@ const LocomotiveScrollContext = createContext<LocomotiveScrollContextType>({
 
 export const useLocomotiveScroll = () => useContext(LocomotiveScrollContext)
 
-interface LocomotiveScrollProviderProps {
-  children: ReactNode
-  options?: any
-}
-
-export const LocomotiveScrollProvider = ({ children, options = {} }: LocomotiveScrollProviderProps) => {
-  const containerRef = useRef<HTMLDivElement>(null)
+/**
+ * Locomotive Scroll v5 (built on Lenis).
+ *
+ * Unlike v4, this keeps NATIVE scrolling — so `position: sticky` (ScrollStack),
+ * framer-motion's `useScroll`, and `window.scrollY` listeners all keep working.
+ * It only smooths the wheel/scroll into a liquid lerp, and enables the
+ * `data-scroll` / `data-scroll-speed` parallax attributes site-wide.
+ */
+export const LocomotiveScrollProvider = ({ children }: { children: ReactNode }) => {
   const [scroll, setScroll] = useState<LocomotiveScroll | null>(null)
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    if (!containerRef.current) return
+    let instance: LocomotiveScroll | null = null
+    let cancelled = false
 
-    // Initialize locomotive-scroll
-    const locomotiveScroll = new LocomotiveScroll({
-      el: containerRef.current,
-      smooth: true,
-      smartphone: {
-        smooth: true,
-      },
-      tablet: {
-        smooth: true,
-      },
-      ...options,
+    // Dynamic import keeps the library strictly client-side.
+    import("locomotive-scroll").then(({ default: LocomotiveScrollV5 }) => {
+      if (cancelled) return
+      instance = new LocomotiveScrollV5({
+        lenisOptions: {
+          lerp: 0.08, // lower = more liquid drift (0.1 is default)
+          smoothWheel: true,
+          wheelMultiplier: 1,
+        },
+      })
+      setScroll(instance)
+      setIsReady(true)
     })
 
-    // Set the scroll instance
-    setScroll(locomotiveScroll)
-    setIsReady(true)
-
-    // Update scroll on page resize
-    const handleResize = () => {
-      locomotiveScroll.update()
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    // Cleanup
     return () => {
-      window.removeEventListener("resize", handleResize)
-      locomotiveScroll.destroy()
+      cancelled = true
+      instance?.destroy()
       setScroll(null)
       setIsReady(false)
     }
-  }, [options])
+  }, [])
 
   return (
     <LocomotiveScrollContext.Provider value={{ scroll, isReady }}>
-      <div data-scroll-container ref={containerRef}>
-        {children}
-      </div>
+      {children}
     </LocomotiveScrollContext.Provider>
   )
 }
