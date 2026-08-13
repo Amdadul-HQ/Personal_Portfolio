@@ -29,6 +29,58 @@ const IDLE_QUIPS = [
 // How long an announcement bubble stays up
 const ANNOUNCE_MS = 2600
 
+// ---------------------------------------------------------------------------
+// Voice intro — 5s after the pet first appears it introduces Amdadul out loud
+// (Web Speech API, prettiest voice available) and pops up a profile card.
+// ---------------------------------------------------------------------------
+
+const INTRO_DELAY_MS = 5000
+// If speech never plays (unsupported / autoplay-blocked) the card still shows this long
+const INTRO_FALLBACK_MS = 16000
+// Absolute watchdog once speech HAS started — if the browser loses the utterance
+// without firing onend/onerror, the card must still close eventually
+const INTRO_MAX_MS = 45000
+const INTRO_CARD_W = 264
+
+const PROFILE = {
+  name: "Amdadul Haque Bhuiyan",
+  role: "Software Engineer @ Digital Pylot",
+  base: "Dhaka, Bangladesh",
+  exp: "3+ yrs · Node.js · Next.js · TypeScript",
+  now: "Building LeadPylot — multi-tenant CRM SaaS",
+  mail: "amdadulhq.dev@gmail.com",
+  status: "Available for work",
+}
+
+const INTRO_SPEECH =
+  "Hi! I'm Amdadul's code bug. Meet Amdadul Haque Bhuiyan — a full-stack software engineer from Dhaka, Bangladesh, with three plus years in Node and Next J S. He's currently building Lead Pylot at Digital Pylot — and yes, he's available for work!"
+
+// Ranked wishlist of known-pleasant voices, then any female English voice,
+// then any English voice at all.
+const VOICE_WISHLIST = [
+  "microsoft aria",
+  "microsoft jenny",
+  "microsoft sonia",
+  "microsoft libby",
+  "samantha",
+  "google uk english female",
+  "google us english",
+  "karen",
+  "moira",
+  "tessa",
+  "microsoft zira",
+  "victoria",
+]
+
+function pickPrettyVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | undefined {
+  const english = voices.filter((v) => v.lang.toLowerCase().startsWith("en"))
+  for (const wish of VOICE_WISHLIST) {
+    const match = english.find((v) => v.name.toLowerCase().includes(wish))
+    if (match) return match
+  }
+  return english.find((v) => /female|woman/i.test(v.name)) ?? english[0] ?? voices[0]
+}
+
 // What the pet wears in each section/page (elements tagged data-pet-section)
 type PetVariant = "classic" | "glasses" | "hardhat" | "gradcap" | "tool" | "pencil" | "mail"
 
@@ -48,12 +100,20 @@ export default function CursorPet() {
   const [active, setActive] = useState(false)
   const [bubble, setBubble] = useState<{ text: string; id: number } | null>(null)
   const [variant, setVariant] = useState<PetVariant>("classic")
+  const [intro, setIntro] = useState<{ below: boolean } | null>(null)
+  const [speaking, setSpeaking] = useState(false)
 
   const activeRef = useRef(false)
   const lastSectionRef = useRef<string | null>(null)
   const bubbleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const bubbleUntil = useRef(0)
   const bubbleId = useRef(0)
+  const introOpenRef = useRef(false)
+  const introDoneRef = useRef(false)
+  const introTimers = useRef<ReturnType<typeof setTimeout>[]>([])
+  const keepAlive = useRef<ReturnType<typeof setInterval> | null>(null)
+  const retryRef = useRef<(() => void) | null>(null)
+  const voicesListenerRef = useRef<(() => void) | null>(null)
 
   const mx = useMotionValue(-80)
   const my = useMotionValue(-80)
@@ -64,12 +124,142 @@ export default function CursorPet() {
   const rotate = useTransform(vx, [-1600, 1600], [-20, 20])
   const scaleX = useTransform(vx, (v) => 1 + Math.min(Math.abs(v) / 5000, 0.18))
   const pupilX = useTransform(vx, [-900, 900], [-2.5, 2.5])
+  // Shift the profile card left when the pet is near the right viewport edge
+  const cardShift = useTransform(x, (v) => {
+    if (typeof window === "undefined") return 0
+    return Math.min(0, window.innerWidth - 16 - INTRO_CARD_W - (v + 24))
+  })
 
   const showBubble = (text: string) => {
+    // The profile card has the floor — no quips while it's open
+    if (introOpenRef.current) return
     if (bubbleTimer.current) clearTimeout(bubbleTimer.current)
     setBubble({ text, id: ++bubbleId.current })
     bubbleUntil.current = Date.now() + ANNOUNCE_MS
     bubbleTimer.current = setTimeout(() => setBubble(null), ANNOUNCE_MS)
+  }
+
+  // --- intro helpers -------------------------------------------------------
+  const clearIntroTimers = () => {
+    introTimers.current.forEach(clearTimeout)
+    introTimers.current = []
+    if (keepAlive.current) clearInterval(keepAlive.current)
+    keepAlive.current = null
+  }
+
+  const detachRetry = () => {
+    if (retryRef.current) {
+      window.removeEventListener("pointerdown", retryRef.current)
+      window.removeEventListener("keydown", retryRef.current)
+      retryRef.current = null
+    }
+  }
+
+  const detachVoices = () => {
+    if (voicesListenerRef.current && "speechSynthesis" in window) {
+      window.speechSynthesis.removeEventListener("voiceschanged", voicesListenerRef.current)
+      voicesListenerRef.current = null
+    }
+  }
+
+  const closeIntro = () => {
+    if (!introOpenRef.current) return
+    introOpenRef.current = false
+    introDoneRef.current = true
+    clearIntroTimers()
+    detachRetry()
+    detachVoices()
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel()
+    setSpeaking(false)
+    setIntro(null)
+    // Small grace period before idle quips resume
+    bubbleUntil.current = Date.now() + 2000
+  }
+
+  const speakIntro = () => {
+    const synth = window.speechSynthesis
+
+    const speakNow = () => {
+      const utter = new SpeechSynthesisUtterance(INTRO_SPEECH)
+      const voice = pickPrettyVoice(synth.getVoices())
+      if (voice) utter.voice = voice
+      utter.rate = 1
+      utter.pitch = 1.06
+      utter.volume = 0.9
+
+      utter.onstart = () => {
+        // Speech drives the card lifetime from here on — but keep an absolute
+        // watchdog in case the browser drops the utterance without any event
+        clearIntroTimers()
+        detachRetry()
+        setSpeaking(true)
+        introTimers.current.push(setTimeout(closeIntro, INTRO_MAX_MS))
+        // Chrome silently stops long remote utterances — a pause/resume nudge keeps
+        // them alive. Chromium-only: on Firefox/WebKit that same nudge can kill speech.
+        if (/chrome|chromium|edg\//i.test(navigator.userAgent)) {
+          keepAlive.current = setInterval(() => {
+            if (synth.speaking && !synth.paused) {
+              synth.pause()
+              synth.resume()
+            }
+          }, 10000)
+        }
+      }
+
+      const finish = () => {
+        setSpeaking(false)
+        if (keepAlive.current) clearInterval(keepAlive.current)
+        keepAlive.current = null
+        introTimers.current.push(setTimeout(closeIntro, 1400))
+      }
+      utter.onend = finish
+      utter.onerror = (e) => {
+        // Autoplay policy: audio needs a user gesture — retry on the first one
+        if (e.error === "not-allowed" && !retryRef.current) {
+          const retry = () => {
+            detachRetry()
+            if (introOpenRef.current) speakNow()
+          }
+          retryRef.current = retry
+          window.addEventListener("pointerdown", retry, { once: true })
+          window.addEventListener("keydown", retry, { once: true })
+          return
+        }
+        finish()
+      }
+
+      synth.cancel() // never queue behind a stale utterance
+      synth.speak(utter)
+    }
+
+    // Voices load async in most browsers — wait briefly, then go with what we have
+    if (synth.getVoices().length > 0) {
+      speakNow()
+    } else {
+      let spoke = false
+      const onVoices = () => {
+        if (spoke) return
+        spoke = true
+        synth.removeEventListener("voiceschanged", onVoices)
+        voicesListenerRef.current = null
+        // The intro may have closed (or the component unmounted) while we waited
+        if (introOpenRef.current) speakNow()
+      }
+      voicesListenerRef.current = onVoices
+      synth.addEventListener("voiceschanged", onVoices)
+      introTimers.current.push(setTimeout(onVoices, 1500))
+    }
+  }
+
+  const openIntro = () => {
+    if (introDoneRef.current || introOpenRef.current) return
+    introOpenRef.current = true
+    // Near the top edge the card opens below the pet instead of above
+    setIntro({ below: y.get() < 300 })
+    if (bubbleTimer.current) clearTimeout(bubbleTimer.current)
+    setBubble(null)
+    introTimers.current.push(setTimeout(closeIntro, INTRO_FALLBACK_MS))
+    if ("speechSynthesis" in window) speakIntro()
   }
 
   // --- cursor tracking -----------------------------------------------------
@@ -134,6 +324,14 @@ export default function CursorPet() {
     )
 
     const scan = () => {
+      // Drop sections that client-side navigation removed, or they leak forever
+      observed.forEach((el) => {
+        if (!el.isConnected) {
+          io.unobserve(el)
+          observed.delete(el)
+          intersecting.delete(el)
+        }
+      })
       document.querySelectorAll("[data-pet-section]").forEach((el) => {
         if (!observed.has(el)) {
           observed.add(el)
@@ -166,16 +364,107 @@ export default function CursorPet() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
+  // --- one-time voice intro + profile card, 5s after the pet first appears --
+  useEffect(() => {
+    if (!active || introDoneRef.current) return
+    const t = setTimeout(openIntro, INTRO_DELAY_MS)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active])
+
+  // While the card is open, flip it above/below the pet as the cursor nears the
+  // top or bottom of the viewport (with hysteresis so it doesn't flap)
+  useEffect(() => {
+    if (!intro) return
+    return y.on("change", (v) => {
+      if (!intro.below && v < 260) setIntro({ below: true })
+      else if (intro.below && v > 340) setIntro({ below: false })
+    })
+  }, [intro, y])
+
+  // Teardown: never leave timers, listeners, or a talking robot behind
+  useEffect(
+    () => () => {
+      introOpenRef.current = false // makes any cancel-triggered callbacks no-ops
+      clearIntroTimers()
+      detachRetry()
+      detachVoices()
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
   if (!enabled) return null
 
   return (
     <motion.div
-      style={{ x, y, rotate, scaleX }}
+      style={{ x, y }}
       animate={{ opacity: active ? 1 : 0, scale: active ? 1 : 0.4 }}
       transition={{ duration: 0.25 }}
       className="pointer-events-none fixed left-0 top-0 z-[80]"
       aria-hidden="true"
     >
+      {/* Intro profile card */}
+      <AnimatePresence>
+        {intro && (
+          <motion.div
+            style={{ x: cardShift, width: INTRO_CARD_W }}
+            initial={{ opacity: 0, y: intro.below ? -8 : 8, scale: 0.85 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: intro.below ? -6 : 6, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className={`absolute left-6 overflow-hidden rounded-lg border border-green-500/40 bg-[#0d1117]/95 font-mono shadow-[0_0_24px_rgba(34,197,94,0.35)] backdrop-blur ${
+              intro.below ? "top-14" : "bottom-14"
+            }`}
+          >
+            <div className="flex items-center gap-1.5 border-b border-[#30363d] bg-[#161b22] px-2.5 py-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
+              <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
+              <span className="h-2 w-2 rounded-full bg-[#28c840]" />
+              <span className="ml-1 truncate text-[10px] text-gray-400">amdadul.profile</span>
+              {speaking && (
+                <motion.span
+                  className="ml-auto text-[10px] text-green-400"
+                  animate={{ opacity: [1, 0.35, 1] }}
+                  transition={{ duration: 0.9, repeat: Infinity }}
+                >
+                  🔊 speaking…
+                </motion.span>
+              )}
+            </div>
+            <motion.div
+              className="space-y-1 px-3 py-2.5 text-[11px] leading-relaxed"
+              initial="hidden"
+              animate="show"
+              variants={{ show: { transition: { staggerChildren: 0.35, delayChildren: 0.3 } } }}
+            >
+              {(
+                [
+                  ["$", "cat ./amdadul.json", "text-gray-500"],
+                  ["name", PROFILE.name],
+                  ["role", PROFILE.role],
+                  ["base", `📍 ${PROFILE.base}`],
+                  ["exp", PROFILE.exp],
+                  ["now", PROFILE.now],
+                  ["mail", PROFILE.mail],
+                  ["status", `🟢 ${PROFILE.status}`],
+                ] as [string, string, string?][]
+              ).map(([k, v, cls]) => (
+                <motion.p
+                  key={k}
+                  variants={{ hidden: { opacity: 0, x: -6 }, show: { opacity: 1, x: 0 } }}
+                  className={`truncate ${cls ?? "text-gray-300"}`}
+                >
+                  <span className="text-green-500">{k === "$" ? "$ " : `${k}: `}</span>
+                  {v}
+                </motion.p>
+              ))}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Speech bubble */}
       <AnimatePresence>
         {bubble && (
@@ -191,6 +480,9 @@ export default function CursorPet() {
         )}
       </AnimatePresence>
 
+      {/* Velocity tilt/stretch lives here so the speech bubble and profile card
+          above stay level while the pet itself leans into the chase. */}
+      <motion.div style={{ rotate, scaleX }}>
       {/* Idle bob lives on an inner element so it doesn't fight the spring position.
           Re-keying by variant restarts it with a pop when the pet changes outfit. */}
       <motion.div
@@ -207,7 +499,7 @@ export default function CursorPet() {
           height="46"
           viewBox="0 0 46 46"
           fill="none"
-          className="drop-shadow-[0_0_14px_rgba(34,197,94,0.45)]"
+          className="overflow-visible drop-shadow-[0_0_14px_rgba(34,197,94,0.45)]"
         >
           <defs>
             <radialGradient id="petBody" cx="35%" cy="30%" r="80%">
@@ -248,8 +540,43 @@ export default function CursorPet() {
             <motion.circle style={{ x: pupilX }} cx="29" cy="23.5" r="2.2" fill="#0a0a0a" />
           </motion.g>
 
-          {/* Smile + coder belly */}
-          <path d="M19 31 Q23 34 27 31" stroke="#0a0a0a" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+          {/* Smile (talking mouth while the intro voice plays) + coder belly */}
+          {speaking ? (
+            <motion.ellipse
+              cx="23"
+              cy="31.5"
+              rx="3"
+              fill="#052e16"
+              animate={{ ry: [0.8, 2.4, 0.8] }}
+              transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ) : (
+            <path d="M19 31 Q23 34 27 31" stroke="#0a0a0a" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+          )}
+
+          {/* Sound waves while speaking */}
+          {speaking && (
+            <g>
+              <motion.path
+                d="M41 21 q3.5 5 0 10"
+                stroke="#4ade80"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                fill="none"
+                animate={{ opacity: [0.2, 1, 0.2] }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+              />
+              <motion.path
+                d="M44.5 19 q5 7 0 14"
+                stroke="#4ade80"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                fill="none"
+                animate={{ opacity: [0.15, 0.8, 0.15] }}
+                transition={{ duration: 0.8, repeat: Infinity, delay: 0.25 }}
+              />
+            </g>
+          )}
           <text x="23" y="39" textAnchor="middle" fontSize="5.5" fontFamily="monospace" fill="#052e16" fontWeight="bold">
             {"</>"}
           </text>
@@ -295,6 +622,7 @@ export default function CursorPet() {
             </text>
           )}
         </svg>
+      </motion.div>
       </motion.div>
     </motion.div>
   )

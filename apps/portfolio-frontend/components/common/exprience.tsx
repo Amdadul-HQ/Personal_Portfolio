@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { MapPin } from "lucide-react"
 import { formatDateRange } from "@/utils/function/durationFunction"
 
 // Type definition for a single experience (shape returned by GET /api/experience)
@@ -10,6 +11,7 @@ interface ExperienceItem {
   id: string
   company: string
   companyImage: string
+  location?: string | null
   description: string
   startDate: string
   endDate: string
@@ -91,7 +93,15 @@ function EditorCard({ experience, index }: { experience: ExperienceItem; index: 
             />
             <div className="min-w-0">
               <h3 className="truncate text-lg font-semibold leading-tight text-white">{experience.role}</h3>
-              <p className="truncate text-sm text-green-400/90">{experience.company}</p>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <p className="truncate text-sm text-green-400/90">{experience.company}</p>
+                {experience.location && (
+                  <span className="flex items-center gap-1 font-mono text-xs text-gray-500">
+                    <MapPin className="h-3 w-3 shrink-0 text-green-500/70" aria-hidden="true" />
+                    {experience.location}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

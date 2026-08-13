@@ -105,6 +105,7 @@ export default function CreateExperiencePage() {
       const experienceData = {
         role: formData.get("role") as string,
         company: formData.get("company") as string,
+        location: formData.get("location") as string,
         description: formData.get("description") as string,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
@@ -196,6 +197,19 @@ export default function CreateExperiencePage() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location" className="text-green-700">
+                Office Location
+              </Label>
+              <Input
+                id="location"
+                name="location"
+                placeholder="e.g. Dhaka, Bangladesh"
+                className="border-green-200 focus-visible:ring-green-500"
+                required
+              />
             </div>
 
             {/* File Upload Section */}

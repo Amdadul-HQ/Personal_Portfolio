@@ -31,6 +31,7 @@ export default function EditExperiencePage() {
   // Form state
   const [role, setRole] = useState("")
   const [company, setCompany] = useState("")
+  const [location, setLocation] = useState("")
   const [description, setDescription] = useState("")
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
@@ -51,6 +52,7 @@ export default function EditExperiencePage() {
         // Set form state
         setRole(experienceData.role || "")
         setCompany(experienceData.company || "")
+        setLocation(experienceData.location || "")
         setDescription(experienceData.description || "")
         setSkills(experienceData.skill || [])
 
@@ -142,6 +144,7 @@ export default function EditExperiencePage() {
       const experienceData = {
         role,
         company,
+        location,
         description,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
@@ -287,6 +290,21 @@ export default function EditExperiencePage() {
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location" className="text-green-700">
+                Office Location
+              </Label>
+              <Input
+                id="location"
+                name="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Dhaka, Bangladesh"
+                className="border-green-200 focus-visible:ring-green-500"
+                required
+              />
             </div>
 
             {/* File Upload Section */}

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { login } from "@/app/action/auth"
+import { toast } from "sonner"
 
 export function LoginForm() {
   const router = useRouter()
@@ -22,26 +23,14 @@ export function LoginForm() {
       const result = await login(formData)
 
       if (result.success) {
-        // toast({
-        //   title: "Login successful",
-        //   description: "Redirecting to dashboard...",
-        //   variant: "default",
-        // })
+        toast.success("Login successful")
         router.push("/dashboard")
         router.refresh()
       } else {
-        // toast({
-        //   title: "Login failed",
-        //   description: result.error || "Please check your credentials and try again",
-        //   variant: "destructive",
-        // })
+        toast.error(result.error || "Please check your credentials and try again")
       }
     } catch (error) {
-    //   toast({
-    //     title: "Something went wrong",
-    //     description: "Please try again later",
-    //     variant: "destructive",
-    //   })
+      toast.error("Something went wrong. Please try again later.")
       console.error("Login error:", error)
     } finally {
       setIsLoading(false)

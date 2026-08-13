@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/component
 import { Calendar } from "@workspace/ui/components/calendar"
 import { cn } from "@workspace/ui/lib/utils"
 import { getSession } from "@/app/action/auth"
+import { toast } from "sonner"
 
 export default function CreateBlogPage() {
   const router = useRouter()
@@ -57,11 +58,7 @@ export default function CreateBlogPage() {
       const file = fileInputRef.current?.files?.[0]
 
       if (!file) {
-        // toast({
-        //   title: "Error",
-        //   description: "Please select a thumbnail image",
-        //   variant: "destructive",
-        // })
+        toast.error("Please select a thumbnail image")
         setIsLoading(false)
         return
       }
@@ -94,6 +91,7 @@ export default function CreateBlogPage() {
       apiFormData.append("data", JSON.stringify(blogData))
 
       if(!accessToken){
+        toast.error("Your session has expired. Please log in again.")
         return
       }
 
@@ -102,30 +100,24 @@ export default function CreateBlogPage() {
         method: "POST",
         body: apiFormData,
         headers:{
-         Authorization: `${accessToken.token}`,   
+         Authorization: `${accessToken.token}`,
         },
         // Don't set Content-Type header, the browser will set it with the boundary
         credentials:"include"
       })
 
-      // if (!response.ok) {
-      //   throw new Error("Failed to create blog")
-      // }
+      const result = await response.json().catch(() => null)
+      if (!response.ok || !result?.success) {
+        toast.error(result?.message || "Failed to create blog post. Please try again.")
+        return
+      }
 
-    //   toast({
-    //     title: "Blog created",
-    //     description: "Your blog post has been created successfully.",
-    //   })
-
+      toast.success("Blog created successfully")
       router.push("/dashboard/blogs")
       router.refresh()
     } catch (error) {
       console.error("Error creating blog:", error)
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to create blog post. Please try again.",
-    //     variant: "destructive",
-    //   })
+      toast.error("Failed to create blog post. Please try again.")
     } finally {
       setIsLoading(false)
     }

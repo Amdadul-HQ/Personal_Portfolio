@@ -16,6 +16,7 @@ type Experience = {
   role: string
   companyImage: string
   company: string
+  location?: string | null
   description: string
   skill: string[]
   startDate: string | Date
@@ -69,6 +70,7 @@ export function ExperienceTable({ experiences }: ExperienceTableProps) {
             <TableRow>
               <TableHead className="w-[80px]">Company</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Location</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Skills</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -90,6 +92,7 @@ export function ExperienceTable({ experiences }: ExperienceTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{exp.role}</TableCell>
+                <TableCell>{exp.location || "—"}</TableCell>
                 <TableCell>
                   {format(new Date(exp.startDate), "MMM yyyy")} -{" "}
                   {new Date(exp.endDate) > new Date() ? "Present" : format(new Date(exp.endDate), "MMM yyyy")}

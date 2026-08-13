@@ -19,6 +19,7 @@ import { Calendar } from "@workspace/ui/components/calendar"
 import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
 import { getSession } from "@/app/action/auth"
+import { toast } from "sonner"
 
 export default function CreateProjectPage() {
   const router = useRouter()
@@ -101,21 +102,13 @@ export default function CreateProjectPage() {
       const file = fileInputRef.current?.files?.[0]
 
       if (!file) {
-        // toast({
-        //   title: "Error",
-        //   description: "Please select a site mockup image",
-        //   variant: "destructive",
-        // })
+        toast.error("Please select a site mockup image")
         setIsLoading(false)
         return
       }
 
       if (!startDate || !endDate) {
-        // toast({
-        //   title: "Error",
-        //   description: "Please select both start and end dates",
-        //   variant: "destructive",
-        // })
+        toast.error("Please select both start and end dates")
         setIsLoading(false)
         return
       }
@@ -147,6 +140,7 @@ export default function CreateProjectPage() {
       apiFormData.append("data", JSON.stringify(projectData))
 
       if(!accessToken){
+        toast.error("Your session has expired. Please log in again.")
         return
       }
 
@@ -155,30 +149,24 @@ export default function CreateProjectPage() {
         method: "POST",
         body: apiFormData,
         headers:{
-         Authorization: `${accessToken.token}`,   
+         Authorization: `${accessToken.token}`,
         },
         credentials:"include"
         // Don't set Content-Type header, the browser will set it with the boundary
       })
-      console.log(await response.json())
-    //   if (!response.ok) {
-    //     throw new Error("Failed to create project")
-    //   }
 
-    //   toast({
-    //     title: "Project created",
-    //     description: "Your project has been created successfully.",
-    //   })
+      const result = await response.json().catch(() => null)
+      if (!response.ok || !result?.success) {
+        toast.error(result?.message || "Failed to create project. Please try again.")
+        return
+      }
 
+      toast.success("Project created successfully")
       router.push("/dashboard/projects")
       router.refresh()
     } catch (error) {
       console.error("Error creating project:", error)
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to create project. Please try again.",
-    //     variant: "destructive",
-    //   })
+      toast.error("Failed to create project. Please try again.")
     } finally {
       setIsLoading(false)
     }
