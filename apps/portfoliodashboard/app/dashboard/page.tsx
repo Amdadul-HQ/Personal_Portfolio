@@ -1,13 +1,47 @@
 import { redirect } from "next/navigation"
 import { getSession } from "../action/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Activity, BookOpen, Briefcase, Code, FileCode, Users } from "lucide-react"
+import { BookOpen, Briefcase, Code, FileCode } from "lucide-react"
+
+async function getCount(path: string): Promise<number> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${path}`, {
+      cache: "no-store",
+    })
+    if (!res.ok) {
+      return 0
+    }
+    const data = await res.json()
+    // Paginated endpoints (blogs, projects) report meta.total; the rest return plain arrays
+    if (data.meta?.total !== undefined) {
+      return data.meta.total
+    }
+    return Array.isArray(data.data) ? data.data.length : 0
+  } catch (error) {
+    console.error(`Error fetching ${path} count:`, error)
+    return 0
+  }
+}
 
 export default async function Dashboard() {
   const session = await getSession()
   if (!session) {
     redirect("/")
   }
+
+  const [blogCount, projectCount, experienceCount, skillCount] = await Promise.all([
+    getCount("blogs?limit=1"),
+    getCount("projects?limit=1"),
+    getCount("experience"),
+    getCount("skills"),
+  ])
+
+  const stats = [
+    { title: "Blogs", value: blogCount, description: "Total blog posts", icon: BookOpen },
+    { title: "Projects", value: projectCount, description: "Total projects", icon: Code },
+    { title: "Experience", value: experienceCount, description: "Work experiences", icon: Briefcase },
+    { title: "Skills", value: skillCount, description: "Total skills", icon: FileCode },
+  ]
 
   return (
     <div className="space-y-6">
@@ -17,71 +51,18 @@ export default async function Dashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Blogs</CardTitle>
-            <BookOpen className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">12</div>
-            <p className="text-sm text-green-600">Total blog posts</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Projects</CardTitle>
-            <Code className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">8</div>
-            <p className="text-sm text-green-600">Total projects</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Experience</CardTitle>
-            <Briefcase className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">5</div>
-            <p className="text-sm text-green-600">Work experiences</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Skills</CardTitle>
-            <FileCode className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">24</div>
-            <p className="text-sm text-green-600">Total skills</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Visitors</CardTitle>
-            <Users className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">1,234</div>
-            <p className="text-sm text-green-600">Monthly visitors</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-green-700">Activity</CardTitle>
-            <Activity className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800">42</div>
-            <p className="text-sm text-green-600">Actions this week</p>
-          </CardContent>
-        </Card>
+        {stats.map((stat) => (
+          <Card key={stat.title} className="border-green-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-green-700">{stat.title}</CardTitle>
+              <stat.icon className="h-5 w-5 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-800">{stat.value}</div>
+              <p className="text-sm text-green-600">{stat.description}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   )

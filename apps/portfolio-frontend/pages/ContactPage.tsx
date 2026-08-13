@@ -6,6 +6,7 @@ import { Mail } from "lucide-react";
 import Link from "next/link";
 import { RevealLinks } from "@/components/common/RevealLinks";
 import Image from "next/image";
+import ContactForm from "@/components/contact-form";
 
 const ContactPage = () => {
   useEffect(() => {
@@ -54,6 +55,12 @@ const ContactPage = () => {
 
             </div>
           </div>
+        </section>
+        <section className={twMerge(
+          "sticky top-0 min-h-screen w-full grid place-content-center overflow-hidden bg-[#0f1524] rounded-t-3xl px-4 py-16",
+          "lenis-section"
+        )}>
+          <ContactForm />
         </section>
         <section className={twMerge(
           "sticky top-0  place-content-center overflow-hidden",

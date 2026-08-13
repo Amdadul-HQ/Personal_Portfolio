@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { RevealLinks } from '../components/common/RevealLinks'
 import { useParams } from 'next/navigation'
 import MaskImage from '@/components/ui/maskImage'
+import { toast } from 'sonner'
 
 export default function BlogDetails() {
   const slug  = useParams<any>()
@@ -20,19 +21,17 @@ export default function BlogDetails() {
     async function fetchBlog() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/${slug?.slug}`)
-
+        if (!response.ok) {
+          throw new Error("Failed to fetch blog")
+        }
         const data = await response.json()
         const blogData = data.data
         setBlog(blogData)
 
       } catch (error) {
         console.error("Error fetching blog:", error)
-        // toast({
-        //   title: "Error",
-        //   description: "Failed to fetch blog data. Please try again.",
-        //   variant: "destructive",
-        // })
-      } 
+        toast.error("Failed to load this blog. Please try again.")
+      }
     }
 
     fetchBlog()

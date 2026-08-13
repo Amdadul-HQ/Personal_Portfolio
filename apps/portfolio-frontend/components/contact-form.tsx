@@ -9,10 +9,12 @@ import { Button } from "@workspace/ui/components/button";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@workspace/ui/components/form";
 import {Input} from "@workspace/ui/components/input";
 import {Textarea} from "@workspace/ui/components/textarea";
+import { toast } from "sonner";
 // Form validation schema
 const formSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  phone: z.string().min(1, { message: "Phone number is required" }),
+  phone: z.string().optional(),
   message: z.string().min(1, { message: "Message is required" }),
 })
 
@@ -21,12 +23,12 @@ type FormValues = z.infer<typeof formSchema>
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const whatsAppNumber = "01756171239" // Replace with your actual WhatsApp number
 
   // Initialize form with React Hook Form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       phone: "",
       message: "",
@@ -38,13 +40,25 @@ export default function ContactForm() {
     setIsSubmitting(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      console.log("Form submitted:", data)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          contact: data.phone ? `${data.email} / ${data.phone}` : data.email,
+          message: data.message,
+        }),
+      })
+      const result = await res.json().catch(() => null)
+      if (!res.ok || !result?.success) {
+        toast.error(result?.message || "Failed to send your message. Please try again.")
+        return
+      }
       setIsSuccess(true)
       form.reset()
     } catch (error) {
       console.error("Error submitting form:", error)
+      toast.error("Failed to send your message. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -72,6 +86,22 @@ export default function ContactForm() {
       ) : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Your name"
+                      {...field}
+                      className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500 dark:bg-[#0f1524] dark:border-green-500/20 dark:placeholder:text-gray-400 dark:focus:border-green-500/40"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -97,7 +127,7 @@ export default function ContactForm() {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="Phone Number"
+                        placeholder="Phone Number (optional)"
                         {...field}
                         className="border-gray-700 text-white h-12 rounded-md focus:border-gray-500 dark:bg-[#0f1524] dark:border-green-500/20 dark:placeholder:text-gray-400 dark:focus:border-green-500/40"
                       />
@@ -133,7 +163,7 @@ export default function ContactForm() {
               >
                 {isSubmitting ? "Sending..." : "Send"}
               </Button>
-              <WhatsAppButton phoneNumber="1234567890" /> {/* Replace with your actual WhatsApp number */}
+              <WhatsAppButton phoneNumber="01756171239" />
             </div>
           </form>
         </Form>

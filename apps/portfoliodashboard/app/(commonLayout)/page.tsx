@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 const page = async() => {
       // Check if user is already logged in
-  const isAuthenticated = (await cookies()).has("auth-token")
+  const isAuthenticated = (await cookies()).has("accessToken")
 
   if (isAuthenticated) {
     redirect("/dashboard")

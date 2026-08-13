@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation'
 import FuzzyOverlay from '@/components/ui/FuzzyOverlay'
 import Image from 'next/image'
 import { intervalToDuration, isValid, parseISO } from 'date-fns'
+import { toast } from 'sonner'
 
 export interface IUser {
   id: string;
@@ -74,19 +75,17 @@ const ProjectDetails = () => {
     async function fetchBlog() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects/${slug?.slug}`)
-
+        if (!response.ok) {
+          throw new Error("Failed to fetch project")
+        }
         const data = await response.json()
         const projectData = data.data
         setProject(projectData)
 
       } catch (error) {
-        console.error("Error fetching blog:", error)
-        // toast({
-        //   title: "Error",
-        //   description: "Failed to fetch blog data. Please try again.",
-        //   variant: "destructive",
-        // })
-      } 
+        console.error("Error fetching project:", error)
+        toast.error("Failed to load this project. Please try again.")
+      }
     }
 
     fetchBlog()

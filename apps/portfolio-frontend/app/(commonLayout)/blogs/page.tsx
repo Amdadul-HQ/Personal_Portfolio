@@ -11,13 +11,13 @@ async function getBlogs() {
     })
 
     if (!res.ok) {
-      throw new Error("Failed to fetch skills")
+      throw new Error("Failed to fetch blogs")
     }
 
     const data = await res.json()
     return data.data || []
   } catch (error) {
-    console.error("Error fetching skills:", error)
+    console.error("Error fetching blogs:", error)
     return []
   }
 }
