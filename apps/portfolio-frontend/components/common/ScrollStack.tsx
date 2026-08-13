@@ -37,13 +37,16 @@ const ScrollStack =()=> {
   return (
       <main>
         <article>
-          <section className="h-screen sticky top-0" id="aboutus" data-pet-section="about-me">
+          {/* NOT sticky: a pinned about-me stays behind the whole page and peeks
+              through rounded corners / any gap in later sections. */}
+          <section className="relative w-full" id="aboutus" data-pet-section="about-me">
             <AboutMe />
           </section>
           {/* NOT sticky/h-screen: the experience timeline is taller than one viewport,
               and a fixed-height sticky wrapper clips everything past the first screen.
-              `relative` keeps it painting above the pinned section before it. */}
-          <section className="relative w-full mb-10" id="experience" data-pet-section="experience">
+              `relative` keeps it painting above the pinned section before it.
+              No bottom margin — any gap here shows the pinned about-me section behind it. */}
+          <section className="relative w-full" id="experience" data-pet-section="experience">
             <Experience />
           </section>
           {/* NOT sticky/h-screen (same clipping issue as experience): the skills

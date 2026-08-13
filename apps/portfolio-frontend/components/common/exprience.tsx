@@ -17,39 +17,12 @@ interface ExperienceItem {
   role: string
 }
 
-// ---------------------------------------------------------------------------
-// Syntax palette (One Dark-ish, strings kept green to match the site brand)
-// ---------------------------------------------------------------------------
-const SYNTAX = {
-  keyword: "#c678dd",
-  variable: "#61afef",
-  property: "#e06c75",
-  string: "#98c379",
-  punctuation: "#6b7280",
-  comment: "#5c6370",
-  lineNumber: "#3b4048",
-}
-
-const toCamelCase = (s: string) =>
-  s
-    .split(/[^a-zA-Z0-9]+/)
-    .filter(Boolean)
-    .map((w, i) => (i === 0 ? w.toLowerCase() : w[0]?.toUpperCase() + w.slice(1).toLowerCase()))
-    .join("")
-
 const toFileName = (s: string) =>
   s
     .split(/[^a-zA-Z0-9]+/)
     .filter(Boolean)
     .join("-")
     .toLowerCase() + ".ts"
-
-// Split the description paragraph into sentence-per-line JSDoc comments
-const toSentences = (text: string): string[] =>
-  text
-    .split(/(?<=\.)\s+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
 
 // ---------------------------------------------------------------------------
 // Floating background glyphs
@@ -65,39 +38,16 @@ const GLYPHS: { symbol: string; top: string; left: string; size: string; duratio
 ]
 
 // ---------------------------------------------------------------------------
-// One rendered "line of code" with its gutter number
-// ---------------------------------------------------------------------------
-function CodeLine({ number, children, indent = 0 }: { number: number; children: React.ReactNode; indent?: number }) {
-  return (
-    <div className="flex items-start">
-      <span
-        className="w-8 shrink-0 select-none pr-3 text-right text-xs leading-6 sm:text-sm"
-        style={{ color: SYNTAX.lineNumber }}
-      >
-        {number}
-      </span>
-      <span className="min-w-0 flex-1 text-xs leading-6 sm:text-sm" style={{ paddingLeft: indent * 14 }}>
-        {children}
-      </span>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// One experience, rendered as a code editor window on the git timeline
+// One experience — a compact editor-window card on the git timeline
 // ---------------------------------------------------------------------------
 function EditorCard({ experience, index }: { experience: ExperienceItem; index: number }) {
+  const [expanded, setExpanded] = useState(false)
   const isCurrent = new Date(experience.endDate) > new Date()
-  const varName = toCamelCase(experience.role)
-  const sentences = toSentences(experience.description)
-
-  let line = 0
-  const next = () => ++line
 
   return (
-    <div className="relative mb-20 pl-12 last:mb-0 md:pl-16">
+    <div className="relative mb-10 pl-12 last:mb-0 md:pl-16">
       {/* Commit node on the git graph */}
-      <div className="absolute left-4 top-9 z-10 -translate-x-1/2">
+      <div className="absolute left-4 top-8 z-10 -translate-x-1/2">
         {isCurrent && (
           <motion.span
             className="absolute inset-0 rounded-full bg-green-500"
@@ -113,104 +63,59 @@ function EditorCard({ experience, index }: { experience: ExperienceItem; index: 
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.05 }}
         transition={{ duration: 0.55, delay: 0.08 * Math.min(index, 3) }}
-        whileHover={{ y: -5 }}
-        className="group overflow-hidden rounded-xl border border-[#30363d] bg-[#0d1117]/95 font-mono shadow-xl backdrop-blur transition-[border-color,box-shadow] duration-300 hover:border-green-500/60 hover:shadow-[0_0_30px_-8px_rgba(34,197,94,0.4)]"
+        whileHover={{ y: -4 }}
+        className="group overflow-hidden rounded-xl border border-[#30363d] bg-[#0d1117]/95 shadow-xl backdrop-blur transition-[border-color,box-shadow] duration-300 hover:border-green-500/60 hover:shadow-[0_0_30px_-8px_rgba(34,197,94,0.4)]"
       >
-        {/* Editor title bar */}
-        <div className="flex flex-wrap items-center gap-3 border-b border-[#30363d] bg-[#161b22] px-4 py-2.5">
+        {/* Slim editor title bar */}
+        <div className="flex flex-wrap items-center gap-3 border-b border-[#30363d] bg-[#161b22] px-4 py-2 font-mono">
           <span className="flex gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
           </span>
-
-          <span className="flex min-w-0 items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-2.5 py-1">
-            <Image
-              src={experience.companyImage || "/placeholder.svg"}
-              alt={experience.company}
-              width={16}
-              height={16}
-              className="h-4 w-4 rounded-sm"
-            />
-            <span className="truncate text-xs text-gray-300">{toFileName(experience.role)}</span>
-            <span className="truncate text-xs text-gray-600">— {experience.company}</span>
-          </span>
-
+          <span className="truncate text-xs text-gray-400">{toFileName(experience.role)}</span>
           <span className="ml-auto rounded-full border border-green-500/30 bg-green-500/10 px-3 py-0.5 text-xs text-green-400">
             {formatDateRange(experience.startDate, experience.endDate)}
           </span>
         </div>
 
-        {/* Code body */}
-        <div className="overflow-x-hidden px-3 py-4 sm:px-4">
-          <CodeLine number={next()}>
-            <span style={{ color: SYNTAX.comment }}>/**</span>
-          </CodeLine>
-          {sentences.map((sentence, i) => (
-            <CodeLine key={i} number={next()}>
-              <span className="italic" style={{ color: SYNTAX.comment }}>
-                {" "}* {sentence}
-              </span>
-            </CodeLine>
-          ))}
-          <CodeLine number={next()}>
-            <span style={{ color: SYNTAX.comment }}>{" "}*/</span>
-          </CodeLine>
+        {/* Compact, readable body */}
+        <div className="px-4 py-4 sm:px-5">
+          <div className="mb-2 flex items-center gap-3">
+            <Image
+              src={experience.companyImage || "/placeholder.svg"}
+              alt={experience.company}
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-md"
+            />
+            <div className="min-w-0">
+              <h3 className="truncate text-lg font-semibold leading-tight text-white">{experience.role}</h3>
+              <p className="truncate text-sm text-green-400/90">{experience.company}</p>
+            </div>
+          </div>
 
-          <CodeLine number={next()}>
-            <span style={{ color: SYNTAX.keyword }}>const</span>{" "}
-            <span style={{ color: SYNTAX.variable }}>{varName}</span>{" "}
-            <span style={{ color: SYNTAX.punctuation }}>= {"{"}</span>
-          </CodeLine>
+          <p className={`text-sm leading-relaxed text-gray-400 ${expanded ? "" : "line-clamp-3"}`}>
+            {experience.description}
+          </p>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="mt-1 font-mono text-xs text-green-500 transition-colors hover:text-green-400"
+          >
+            {expanded ? "// show less ▲" : "// read more ▼"}
+          </button>
 
-          <CodeLine number={next()} indent={1}>
-            <span style={{ color: SYNTAX.property }}>company</span>
-            <span style={{ color: SYNTAX.punctuation }}>: </span>
-            <span style={{ color: SYNTAX.string }}>&quot;{experience.company}&quot;</span>
-            <span style={{ color: SYNTAX.punctuation }}>,</span>
-          </CodeLine>
-
-          <CodeLine number={next()} indent={1}>
-            <span style={{ color: SYNTAX.property }}>role</span>
-            <span style={{ color: SYNTAX.punctuation }}>: </span>
-            <span style={{ color: SYNTAX.string }}>&quot;{experience.role}&quot;</span>
-            <span style={{ color: SYNTAX.punctuation }}>,</span>
-          </CodeLine>
-
-          {isCurrent && (
-            <CodeLine number={next()} indent={1}>
-              <span style={{ color: SYNTAX.property }}>status</span>
-              <span style={{ color: SYNTAX.punctuation }}>: </span>
-              <span style={{ color: SYNTAX.string }}>&quot;shipping 🚀&quot;</span>
-              <span style={{ color: SYNTAX.punctuation }}>,</span>
-            </CodeLine>
-          )}
-
-          <CodeLine number={next()} indent={1}>
-            <span style={{ color: SYNTAX.property }}>stack</span>
-            <span style={{ color: SYNTAX.punctuation }}>: [</span>
-            {experience.skill.map((tech, i) => (
-              <span key={i} className="inline-block">
-                <span
-                  className="cursor-default rounded px-0.5 transition-colors duration-200 hover:bg-green-500/15"
-                  style={{ color: SYNTAX.string }}
-                >
-                  &quot;{tech}&quot;
-                </span>
-                {i < experience.skill.length - 1 && <span style={{ color: SYNTAX.punctuation }}>, </span>}
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {experience.skill.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-md border border-green-500/20 bg-green-500/10 px-2 py-0.5 font-mono text-xs text-green-300"
+              >
+                {tech}
               </span>
             ))}
-            <span style={{ color: SYNTAX.punctuation }}>],</span>
-          </CodeLine>
-
-          <CodeLine number={next()}>
-            <span style={{ color: SYNTAX.punctuation }}>{"}"}</span>
-          </CodeLine>
-
-          <CodeLine number={next()}>
-            <span style={{ color: SYNTAX.keyword }}>export default</span>{" "}
-            <span style={{ color: SYNTAX.variable }}>{varName}</span>
-          </CodeLine>
+          </div>
         </div>
       </motion.article>
     </div>
