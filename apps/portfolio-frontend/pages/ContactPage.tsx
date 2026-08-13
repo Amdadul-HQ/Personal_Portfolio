@@ -34,7 +34,7 @@ const ContactPage = () => {
             <div className="flex justify-center space-x-4">
               <Link
                 target="_blank"
-                href="mailto:rimonamdadul301@gmail.com"
+                href="mailto:amdadulhq.dev@gmail.com"
                 className={twMerge(
                   "bg-[#333] flex gap-2 text-white px-6 py-3 rounded-full hover:bg-[#4d4d4d] font-semibold transition-colors",
                   "lenis-link"
